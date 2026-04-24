@@ -1,14 +1,20 @@
 export const categories = {
-    "Men": [
-        "Tops", "Bottoms", "Hoodies & Jackets", "Activewear", "Accessories"
+    "Shirts": [
+        "Formal Shirts", "Casual Shirts", "T-Shirts", "Polos"
     ],
-    "Women": [
-        "Tops", "Leggings & Bottoms", "Dresses", "Bras & Crops", "Accessories"
+    "Trousers": [
+        "Chinos", "Jeans", "Formal Trousers", "Shorts"
     ],
-    "Kids": [
-        "Boys Clothing", "Girls Clothing", "Shoes", "School Gear"
+    "Outerwear": [
+        "Jackets", "Blazers", "Coats", "Hoodies"
     ],
-    "Gear": [
-        "Bags", "Equipment", "Water Bottles", "Mats"
+    "Footwear": [
+        "Sneakers", "Formal Shoes", "Boots", "Sandals"
+    ],
+    "Essentials": [
+        "Underwear", "Socks", "Vests"
+    ],
+    "Accessories": [
+        "Belts", "Caps", "Bags", "Wallets"
     ]
 };

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './FeaturedCollection.css';
-import menImg from '../images/fit17.jpg';
-import womenImg from '../images/fit16.jpg';
-import gearImg from '../images/fit9.jpg';
+import shirtsImg from '../images/fit17.jpg';
+import trousersImg from '../images/fit16.jpg';
+import footwearImg from '../images/fit9.jpg';
 
 const FeaturedCollection = () => {
     return (
@@ -13,24 +13,24 @@ const FeaturedCollection = () => {
             </div>
             <div className="collection-grid">
                 <div className="collection-card">
-                    <img src={menImg} alt="Men's Collection" />
+                    <img src={shirtsImg} alt="Shirts Collection" />
                     <div className="collection-content">
-                        <h3>Men's Collection</h3>
-                        <Link to="/men" className="collection-btn">Shop Men</Link>
+                        <h3>Shirts</h3>
+                        <Link to="/shirts" className="collection-btn">Shop Shirts</Link>
                     </div>
                 </div>
                 <div className="collection-card">
-                    <img src={womenImg} alt="Women's Collection" />
+                    <img src={trousersImg} alt="Trousers Collection" />
                     <div className="collection-content">
-                        <h3>Women's Collection</h3>
-                        <Link to="/women" className="collection-btn">Shop Women</Link>
+                        <h3>Trousers</h3>
+                        <Link to="/trousers" className="collection-btn">Shop Trousers</Link>
                     </div>
                 </div>
                 <div className="collection-card">
-                    <img src={gearImg} alt="Gear & Accessories" />
+                    <img src={footwearImg} alt="Footwear Collection" />
                     <div className="collection-content">
-                        <h3>Gear & Accessories</h3>
-                        <Link to="/gear" className="collection-btn">Shop Gear</Link>
+                        <h3>Footwear</h3>
+                        <Link to="/footwear" className="collection-btn">Shop Footwear</Link>
                     </div>
                 </div>
             </div>

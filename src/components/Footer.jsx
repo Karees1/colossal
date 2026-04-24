@@ -32,10 +32,12 @@ function Footer() {
           <h4>Quick Links</h4>
           <ul className="footer-links">
             <li><Link to="/">Home</Link></li>
-            <li><Link to="/men">Men's Collection</Link></li>
-            <li><Link to="/women">Women's Collection</Link></li>
-            <li><Link to="/kids">Kids' Collection</Link></li>
-            <li><Link to="/gear">Gear & Accessories</Link></li>
+            <li><Link to="/shirts">Shirts</Link></li>
+            <li><Link to="/trousers">Trousers</Link></li>
+            <li><Link to="/footwear">Footwear</Link></li>
+            <li><Link to="/outerwear">Outerwear</Link></li>
+            <li><Link to="/essentials">Essentials</Link></li>
+            <li><Link to="/accessories">Accessories</Link></li>
           </ul>
         </div>
 

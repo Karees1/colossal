@@ -7,7 +7,7 @@ const AdminUpload = () => {
     const [formData, setFormData] = useState({
         name: '',
         price: '',
-        category: 'Men',
+        category: 'Shirts',
         sub_category: '',
         description: '',
         material: ''

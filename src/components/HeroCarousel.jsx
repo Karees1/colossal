@@ -9,24 +9,24 @@ import fit11 from "../images/fit11.jpg";
 const slides = [
   {
     image: fit1,
-    heading: "Train Hard. Look Good.",
-    sub: "Premium gym apparel built for performance",
-    link: "/men",
-    cta: "Shop Men's",
+    heading: "Dress Sharp. Stand Out.",
+    sub: "Premium shirts & trousers for every occasion",
+    link: "/shirts",
+    cta: "Shop Shirts",
   },
   {
     image: fit5,
-    heading: "Own Your Grind",
-    sub: "Gear & accessories for every workout",
-    link: "/gear",
-    cta: "Shop Gear",
+    heading: "Step Up Your Sole Game",
+    sub: "Sneakers, boots & formal shoes — all in one place",
+    link: "/footwear",
+    cta: "Shop Footwear",
   },
   {
     image: fit11,
     heading: "New Arrivals",
-    sub: "Fresh drops for the season",
-    link: "/women",
-    cta: "Shop Women's",
+    sub: "Fresh drops — jackets, chinos, accessories & more",
+    link: "/outerwear",
+    cta: "Shop Outerwear",
   },
 ];
 
