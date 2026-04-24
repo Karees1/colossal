@@ -1,88 +1,10 @@
-// import React, { useState, useEffect } from "react";
-// import { Link } from "react-router-dom";
-// import "./Navbar.css";
-// import { FaHeart, FaShoppingCart, FaUser, FaSearch } from "react-icons/fa";
-// import { cartManager } from "../utils/cartManager"; // ADD THIS
-
-// function Navbar() {
-//   const [favoritesCount, setFavoritesCount] = useState(0);
-//   const [cartCount, setCartCount] = useState(0); // NEW: Cart count state
-
-//   // Update favorites count (keep your existing)
-//   useEffect(() => {
-//     const updateFavoritesCount = () => {
-//       const favorites = localStorage.getItem('colossalGainzFavorites');
-//       const count = favorites ? JSON.parse(favorites).length : 0;
-//       setFavoritesCount(count);
-//     };
-
-//     updateFavoritesCount();
-//     window.addEventListener('storage', updateFavoritesCount);
-//     window.addEventListener('favoritesUpdated', updateFavoritesCount);
-
-//     return () => {
-//       window.removeEventListener('storage', updateFavoritesCount);
-//       window.removeEventListener('favoritesUpdated', updateFavoritesCount);
-//     };
-//   }, []);
-
-//   // NEW: Update cart count
-//   useEffect(() => {
-//     const updateCartCount = () => {
-//       const count = cartManager.getCartCount();
-//       setCartCount(count);
-//     };
-
-//     // Update on mount
-//     updateCartCount();
-
-//     // Listen for cart updates
-//     window.addEventListener('storage', updateCartCount);
-//     window.addEventListener('cartUpdated', updateCartCount);
-
-//     return () => {
-//       window.removeEventListener('storage', updateCartCount);
-//       window.removeEventListener('cartUpdated', updateCartCount);
-//     };
-//   }, []);
-
-//   return (
-//     <nav className="navbar">
-//       <ul className="nav-links">
-//         <li><Link to="/men">Men</Link></li>
-//         <li><Link to="/women">Women</Link></li>
-//         <li><Link to="/gear">Gear</Link></li>
-//       </ul>
-
-//       <Link to="/" className="brand">Colossal Gainz</Link>
-
-//       <div className="nav-icons">
-//         <Link to="/favorites" className="icon-link">
-//           <FaHeart className="icon"/>
-//           {favoritesCount > 0 && (
-//             <span className="favorites-badge">{favoritesCount}</span>
-//           )}
-//         </Link>
-
-//         <Link to="/cart" className="icon-link"> {/* UPDATED: Wrap cart icon */}
-//           <FaShoppingCart className="icon"/>
-//           {cartCount > 0 && ( // NEW: Cart badge */}
-//             <span className="cart-badge">{cartCount}</span>
-//           )}
-//         </Link>
-
-//         <FaUser className="icon"/>
-//         <FaSearch className="icon"/>
-//       </div>
-//     </nav>
-//   );
-// }
-
-// export default Navbar;
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
-import { FaHeart, FaShoppingCart, FaUser, FaSearch, FaChevronDown, FaSignOutAlt } from "react-icons/fa";
+import {
+  FaHeart, FaShoppingCart, FaUser, FaBars,
+  FaTimes, FaChevronDown, FaSignOutAlt
+} from "react-icons/fa";
 import { cartManager } from "../utils/cartManager";
 import { useAuth } from "../context/AuthContext";
 import { categories } from "./categories";
@@ -90,152 +12,160 @@ import { categories } from "./categories";
 function Navbar() {
   const [favoritesCount, setFavoritesCount] = useState(0);
   const [cartCount, setCartCount] = useState(0);
-  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [expandedCategory, setExpandedCategory] = useState(null);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const userDropdownCloseTimeout = useRef(null);
   const { isAuthenticated, user, logout } = useAuth();
 
-  // Update favorites count
   useEffect(() => {
-    const updateFavoritesCount = () => {
-      const favorites = localStorage.getItem('colossalGainzFavorites');
-      const count = favorites ? JSON.parse(favorites).length : 0;
-      setFavoritesCount(count);
+    const update = () => {
+      const fav = localStorage.getItem('colossalGainzFavorites');
+      setFavoritesCount(fav ? JSON.parse(fav).length : 0);
     };
-
-    updateFavoritesCount();
-    window.addEventListener('storage', updateFavoritesCount);
-    window.addEventListener('favoritesUpdated', updateFavoritesCount);
-
+    update();
+    window.addEventListener('storage', update);
+    window.addEventListener('favoritesUpdated', update);
     return () => {
-      window.removeEventListener('storage', updateFavoritesCount);
-      window.removeEventListener('favoritesUpdated', updateFavoritesCount);
+      window.removeEventListener('storage', update);
+      window.removeEventListener('favoritesUpdated', update);
     };
   }, []);
 
-  // Update cart count
   useEffect(() => {
-    const updateCartCount = () => {
-      const count = cartManager.getCartCount();
-      setCartCount(count);
-    };
-
-    updateCartCount();
-    window.addEventListener('storage', updateCartCount);
-    window.addEventListener('cartUpdated', updateCartCount);
-
+    const update = () => setCartCount(cartManager.getCartCount());
+    update();
+    window.addEventListener('storage', update);
+    window.addEventListener('cartUpdated', update);
     return () => {
-      window.removeEventListener('storage', updateCartCount);
-      window.removeEventListener('cartUpdated', updateCartCount);
+      window.removeEventListener('storage', update);
+      window.removeEventListener('cartUpdated', update);
     };
   }, []);
+
+  const closeSidebar = () => {
+    setSidebarOpen(false);
+    setExpandedCategory(null);
+  };
 
   return (
-    <nav className="navbar">
-      {/* Left Navigation with Dropdowns */}
-      <ul className="nav-links">
-        {Object.keys(categories).map((category) => (
-          <li
-            key={category}
-            className="nav-item dropdown"
-            onMouseEnter={() => setActiveDropdown(category)}
-            onMouseLeave={() => setActiveDropdown(null)}
+    <>
+      {/* ── Top Bar ── */}
+      <nav className="topbar">
+        <button className="hamburger" onClick={() => setSidebarOpen(true)} aria-label="Open menu">
+          <FaBars />
+        </button>
+
+        <Link to="/" className="brand">Colossal Gainz</Link>
+
+        <div className="nav-icons">
+          <Link to="/favorites" className="icon-link">
+            <FaHeart className="icon" />
+            {favoritesCount > 0 && <span className="favorites-badge">{favoritesCount}</span>}
+          </Link>
+
+          <Link to="/cart" className="icon-link">
+            <FaShoppingCart className="icon" />
+            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+          </Link>
+
+          <div
+            className="icon-link user-dropdown-wrap"
+            onMouseEnter={() => {
+              clearTimeout(userDropdownCloseTimeout.current);
+              setIsUserDropdownOpen(true);
+            }}
+            onMouseLeave={() => {
+              userDropdownCloseTimeout.current = setTimeout(() => setIsUserDropdownOpen(false), 220);
+            }}
           >
-            <Link to={`/${category.toLowerCase()}`} className="nav-link">
-              {category} <FaChevronDown className="dropdown-arrow" />
-            </Link>
-            {activeDropdown === category && (
-              <div className="dropdown-menu">
-                {categories[category].map((subCategory) => (
+            <FaUser className="icon" />
+            {isUserDropdownOpen && (
+              <div className="user-dropdown-menu">
+                {isAuthenticated ? (
+                  <>
+                    <div className="dropdown-header">{user?.username || "Welcome"}</div>
+                    <Link to="/admin" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}>Admin Panel</Link>
+                    <button
+                      onClick={() => { logout(); setIsUserDropdownOpen(false); }}
+                      className="dropdown-item logout-btn"
+                    >
+                      <FaSignOutAlt /> Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}>Login</Link>
+                    <Link to="/register" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}>Sign Up</Link>
+                    <Link to="/admin" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}>Admin Panel</Link>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </nav>
+
+      {/* ── Sidebar Overlay ── */}
+      <div className={`sidebar-overlay ${sidebarOpen ? 'visible' : ''}`} onClick={closeSidebar} />
+
+      {/* ── Sidebar ── */}
+      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+        <div className="sidebar-header">
+          <Link to="/" className="sidebar-brand" onClick={closeSidebar}>Colossal Gainz</Link>
+          <button className="sidebar-close" onClick={closeSidebar} aria-label="Close menu">
+            <FaTimes />
+          </button>
+        </div>
+
+        <nav className="sidebar-nav">
+          {Object.keys(categories).map((category) => (
+            <div key={category} className="sidebar-category">
+              <button
+                className={`sidebar-category-btn ${expandedCategory === category ? 'active' : ''}`}
+                onClick={() => setExpandedCategory(prev => prev === category ? null : category)}
+              >
+                <span>{category}</span>
+                <FaChevronDown className={`chevron ${expandedCategory === category ? 'rotated' : ''}`} />
+              </button>
+
+              <div className={`sidebar-subcategories ${expandedCategory === category ? 'expanded' : ''}`}>
+                {categories[category].map((sub) => (
                   <Link
-                    key={subCategory}
-                    to={`/${category.toLowerCase()}/${subCategory.toLowerCase().replace(/ & /g, '-').replace(/\s+/g, '-')}`}
-                    className="dropdown-item"
+                    key={sub}
+                    to={`/${category.toLowerCase()}/${sub.toLowerCase().replace(/ & /g, '-').replace(/\s+/g, '-')}`}
+                    className="sidebar-sub-link"
+                    onClick={closeSidebar}
                   >
-                    {subCategory}
+                    {sub}
                   </Link>
                 ))}
-                <Link to={`/${category.toLowerCase()}`} className="dropdown-item view-all">
+                <Link
+                  to={`/${category.toLowerCase()}`}
+                  className="sidebar-sub-link view-all"
+                  onClick={closeSidebar}
+                >
                   View All {category}
                 </Link>
               </div>
-            )}
-          </li>
-        ))}
-      </ul>
+            </div>
+          ))}
+        </nav>
 
-      {/* Center Brand */}
-      <Link to="/" className="brand">Colossal Gainz</Link>
-
-      {/* Right Icons */}
-      <div className="nav-icons">
-        <Link to="/favorites" className="icon-link">
-          <FaHeart className="icon" />
-          {favoritesCount > 0 && (
-            <span className="favorites-badge">{favoritesCount}</span>
-          )}
-        </Link>
-
-        <Link to="/cart" className="icon-link">
-          <FaShoppingCart className="icon" />
-          {cartCount > 0 && (
-            <span className="cart-badge">{cartCount}</span>
-          )}
-        </Link>
-
-        {/* User Auth Dropdown */}
-        <div
-          className="icon-link user-dropdown"
-          onMouseEnter={() => {
-            if (userDropdownCloseTimeout.current) {
-              clearTimeout(userDropdownCloseTimeout.current);
-              userDropdownCloseTimeout.current = null;
-            }
-            setIsUserDropdownOpen(true);
-          }}
-          onMouseLeave={() => {
-            // Delay hiding so pointer can move into the menu without it disappearing
-            userDropdownCloseTimeout.current = setTimeout(() => {
-              setIsUserDropdownOpen(false);
-              userDropdownCloseTimeout.current = null;
-            }, 220);
-          }}
-        >
-          <FaUser className="icon" />
-          {isUserDropdownOpen && (
-            <div className="user-dropdown-menu">
-              {isAuthenticated ? (
-                <>
-                  <div className="dropdown-header">
-                    {user?.username || "Welcome"}
-                  </div>
-                  <Link to="/admin" className="dropdown-item">Admin Panel</Link>
-                  <button
-                    onClick={() => {
-                      logout();
-                      setIsUserDropdownOpen(false);
-                    }}
-                    className="dropdown-item logout-btn"
-                  >
-                    <FaSignOutAlt /> Logout
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link to="/login" className="dropdown-item">Login</Link>
-                  <Link to="/register" className="dropdown-item">Sign Up</Link>
-                  <Link to="/admin" className="dropdown-item">Admin Panel</Link>
-                </>
-              )}
+        <div className="sidebar-footer">
+          {isAuthenticated ? (
+            <button onClick={() => { logout(); closeSidebar(); }} className="sidebar-auth-btn">
+              <FaSignOutAlt /> Logout
+            </button>
+          ) : (
+            <div className="sidebar-auth-links">
+              <Link to="/login" className="sidebar-auth-btn" onClick={closeSidebar}>Login</Link>
+              <Link to="/register" className="sidebar-auth-btn outline" onClick={closeSidebar}>Sign Up</Link>
             </div>
           )}
         </div>
-
-        <button className="icon-link search-icon">
-          <FaSearch className="icon" />
-        </button>
-      </div>
-    </nav>
+      </aside>
+    </>
   );
 }
 
