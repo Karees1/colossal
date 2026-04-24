@@ -1,9 +1,30 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './FeaturedCollection.css';
-import shirtsImg from '../images/fit17.jpg';
-import trousersImg from '../images/fit16.jpg';
-import footwearImg from '../images/fit9.jpg';
+
+const collections = [
+    {
+        label:   'Shirts',
+        heading: 'The Shirt Edit',
+        link:    '/shirts',
+        cta:     'Shop Shirts',
+        img:     '/utilities/images/white_shirt_front.png',
+    },
+    {
+        label:   'Trousers',
+        heading: 'Tailored Trousers',
+        link:    '/trousers',
+        cta:     'Shop Trousers',
+        img:     '/utilities/images/tr.jpg',
+    },
+    {
+        label:   'Denim',
+        heading: 'Premium Denim',
+        link:    '/trousers',
+        cta:     'Shop Jeans',
+        img:     '/utilities/images/denim-jeans.jpg',
+    },
+];
 
 const FeaturedCollection = () => {
     return (
@@ -13,27 +34,15 @@ const FeaturedCollection = () => {
                 <p>Shop the Season</p>
             </div>
             <div className="collection-grid">
-                <div className="collection-card">
-                    <img src={shirtsImg} alt="Shirts Collection" />
-                    <div className="collection-content">
-                        <h3>Shirts</h3>
-                        <Link to="/shirts" className="collection-btn">Shop Shirts</Link>
+                {collections.map((col) => (
+                    <div className="collection-card" key={col.label}>
+                        <img src={col.img} alt={col.heading} />
+                        <div className="collection-content">
+                            <h3>{col.heading}</h3>
+                            <Link to={col.link} className="collection-btn">{col.cta}</Link>
+                        </div>
                     </div>
-                </div>
-                <div className="collection-card">
-                    <img src={trousersImg} alt="Trousers Collection" />
-                    <div className="collection-content">
-                        <h3>Trousers</h3>
-                        <Link to="/trousers" className="collection-btn">Shop Trousers</Link>
-                    </div>
-                </div>
-                <div className="collection-card">
-                    <img src={footwearImg} alt="Footwear Collection" />
-                    <div className="collection-content">
-                        <h3>Footwear</h3>
-                        <Link to="/footwear" className="collection-btn">Shop Footwear</Link>
-                    </div>
-                </div>
+                ))}
             </div>
         </section>
     );

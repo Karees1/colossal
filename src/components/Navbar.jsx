@@ -84,8 +84,15 @@ function Navbar() {
               <div className="user-dropdown-menu">
                 {isAuthenticated ? (
                   <>
-                    <div className="dropdown-header">{user?.username || "Welcome"}</div>
-                    <Link to="/admin" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}>Admin Panel</Link>
+                    <div className="dropdown-header">
+                      {user?.username || "Welcome"}
+                      {user?.user_type === 'admin' && <span className="admin-badge">Admin</span>}
+                    </div>
+                    {user?.user_type === 'admin' && (
+                      <Link to="/admin" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}>
+                        Admin Panel
+                      </Link>
+                    )}
                     <button
                       onClick={() => { logout(); setIsUserDropdownOpen(false); }}
                       className="dropdown-item logout-btn"
@@ -97,7 +104,6 @@ function Navbar() {
                   <>
                     <Link to="/login" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}>Login</Link>
                     <Link to="/register" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}>Sign Up</Link>
-                    <Link to="/admin" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}>Admin Panel</Link>
                   </>
                 )}
               </div>

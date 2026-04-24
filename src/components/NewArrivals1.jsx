@@ -76,11 +76,6 @@ function NewArrivals() {
         <section className="new-arrivals-section">
             <div className="section-header">
                 <h2>New Arrivals</h2>
-                <div className="mini-nav">
-                    <span>Men</span>
-                    <span>Women</span>
-                    <span>Gear</span>
-                </div>
             </div>
 
 
