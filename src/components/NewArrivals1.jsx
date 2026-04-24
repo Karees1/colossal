@@ -5,19 +5,15 @@ import { Link } from "react-router-dom";
 import { cartManager } from "../utils/cartManager";
 import { favoritesManager } from "../utils/favoritesManager";
 import { showToast } from "./Toast";
-
-// Keep your image imports as a fallback/placeholder
 import fit17 from "../images/fit4.jpg";
+import API_URL from "../config";
 
-// Placeholder if image is missing
 const placeholderImg = fit17;
 
 function resolveImageUrl(img) {
     if (!img) return placeholderImg;
-
-    // If it is your clean DB filename ("men.jpg"), add the folder
     if (img.startsWith('http')) return img;
-    return `/utilities/images/${img}`;
+    return `${API_URL}/utilities/images/${img}`;
 }
 function NewArrivals() {
     const [favorites, setFavorites] = useState([]);
@@ -33,7 +29,7 @@ function NewArrivals() {
     // <--- 2. THE FETCHER: Get data from Port 5000
     const fetchProducts = async () => {
         try {
-            const response = await fetch("http://localhost:5000/products");
+            const response = await fetch(`${API_URL}/products`);
             const data = await response.json();
             console.log("New Arrivals loaded:", data);
             setDbProducts(data);

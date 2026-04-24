@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Checkout.css';
 import { cartManager } from '../utils/cartManager';
 import { showToast } from '../components/Toast';
+import API_URL from '../config';
 
 function Checkout() {
   const navigate = useNavigate();
@@ -92,7 +93,7 @@ function Checkout() {
 
     try {
       // POST to backend
-      const res = await fetch('http://localhost:5000/api/orders', {
+      const res = await fetch(`${API_URL}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

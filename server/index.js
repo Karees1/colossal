@@ -10,15 +10,20 @@ const cookieParser = require("cookie-parser");
 const rateLimit    = require("express-rate-limit");
 
 const app  = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
-const JWT_SECRET         = "gentleman_jwt_secret_2024";
-const JWT_REFRESH_SECRET = "gentleman_refresh_secret_2024";
+const JWT_SECRET         = process.env.JWT_SECRET         || "gentleman_jwt_secret_2024";
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || "gentleman_refresh_secret_2024";
 const SALT_ROUNDS        = 10;
 
 // ─── MIDDLEWARE ──────────────────────────────────────────
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || "http://localhost:3000").split(",").map(o => o.trim());
+
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: (origin, cb) => {
+        if (!origin || allowedOrigins.includes(origin)) cb(null, true);
+        else cb(new Error("Not allowed by CORS"));
+    },
     credentials: true,
 }));
 app.use(express.json());
@@ -29,13 +34,20 @@ const publicDir = path.join(__dirname, "../public");
 app.use(express.static(publicDir));
 
 // ─── DATABASE ────────────────────────────────────────────
-const pool = new Pool({
-    user:     "postgres",
-    host:     "localhost",
-    database: "colossal2",
-    password: "Kariuki_123",
-    port:     5432,
-});
+const pool = new Pool(
+    process.env.DATABASE_URL
+        ? {
+              connectionString: process.env.DATABASE_URL,
+              ssl: { rejectUnauthorized: false },
+          }
+        : {
+              user:     process.env.DB_USER     || "postgres",
+              host:     process.env.DB_HOST     || "localhost",
+              database: process.env.DB_NAME     || "colossal2",
+              password: process.env.DB_PASSWORD || "Kariuki_123",
+              port:     process.env.DB_PORT     || 5432,
+          }
+);
 
 // Auto-create tables on startup
 const initDB = async () => {

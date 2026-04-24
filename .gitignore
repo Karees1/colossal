@@ -33,3 +33,7 @@ AUTH_SETUP_GUIDE.md
 GET_STARTED.md
 IMPLEMENTATION_SUMMARY.md
 QUICK_START_WINDOWS.md
+
+# Env files (keep .env.example files)
+.env
+server/.env

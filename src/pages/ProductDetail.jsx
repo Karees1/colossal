@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import API_URL from '../config';
 import './ProductDetail.css';
 import { FaHeart, FaShoppingCart, FaStar, FaTruck, FaShieldAlt, FaExchangeAlt } from 'react-icons/fa';
 import placeholderImg from "../images/fit17.jpg";
@@ -23,7 +24,7 @@ function ProductDetail() {
       setLoading(true);
       try {
         // 1. Fetch the specific product by ID
-        const response = await fetch(`http://localhost:5000/products/${productId}`);
+        const response = await fetch(`${API_URL}/products/${productId}`);
         if (!response.ok) throw new Error('Product not found');
 
         const found = await response.json();
@@ -31,7 +32,7 @@ function ProductDetail() {
 
         // 2. Fetch related products (by category)
         if (found.category) {
-          const relatedRes = await fetch(`http://localhost:5000/products?category=${found.category}`);
+          const relatedRes = await fetch(`${API_URL}/products?category=${found.category}`);
           const relatedData = await relatedRes.json();
           setRelatedProducts(relatedData.filter(p => p.id !== found.id).slice(0, 6));
         } else {
@@ -72,8 +73,7 @@ function ProductDetail() {
     if (Array.isArray(imgPath)) imgPath = imgPath[0];
     if (typeof imgPath !== 'string') return placeholderImg;
     if (imgPath.startsWith('http://') || imgPath.startsWith('https://')) return imgPath;
-    // Handle DB filenames by pointing to utilities/images
-    return `/utilities/images/${imgPath}`;
+    return `${API_URL}/utilities/images/${imgPath}`;
   };
 
   // Robustly get name and images (DB vs Static)

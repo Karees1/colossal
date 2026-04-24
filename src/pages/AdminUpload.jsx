@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { categories } from '../components/categories';
 import './AdminUpload.css';
 import { showToast } from '../components/Toast';
+import API_URL from '../config';
 
 const authHeader = () => ({
     'Authorization': `Bearer ${localStorage.getItem('accessToken') || ''}`,
@@ -32,7 +33,7 @@ const AdminUpload = () => {
 
     const loadProducts = async () => {
         try {
-            const res  = await fetch('http://localhost:5000/products');
+            const res  = await fetch(`${API_URL}/products`);
             const data = await res.json();
             setProducts(Array.isArray(data) ? data : []);
         } catch { /* server may be offline */ }
@@ -61,7 +62,7 @@ const AdminUpload = () => {
     const uploadImage = async (file) => {
         const data = new FormData();
         data.append('image', file);
-        const res  = await fetch('http://localhost:5000/upload', {
+        const res  = await fetch(`${API_URL}/upload`, {
             method: 'POST',
             headers: authHeader(),
             body: data,
@@ -96,10 +97,10 @@ const AdminUpload = () => {
         setSizes(Array.isArray(product.sizes) ? product.sizes : []);
         setColors(Array.isArray(product.colors) ? product.colors : []);
         setFrontPreview(product.frontimg
-            ? `http://localhost:5000/images/${product.frontimg}`
+            ? `${API_URL}/utilities/images/${product.frontimg}`
             : null);
         setBackPreview(product.backimg
-            ? `http://localhost:5000/images/${product.backimg}`
+            ? `${API_URL}/utilities/images/${product.backimg}`
             : null);
         setFrontImgFile(null);
         setBackImgFile(null);
@@ -111,7 +112,7 @@ const AdminUpload = () => {
     const handleDelete = async (id) => {
         if (!window.confirm('Delete this product?')) return;
         try {
-            const res = await fetch(`http://localhost:5000/products/${id}`, {
+            const res = await fetch(`${API_URL}/products/${id}`, {
                 method: 'DELETE',
                 headers: authHeader(),
             });
@@ -149,7 +150,7 @@ const AdminUpload = () => {
                 backimg:  backFilename,
             };
 
-            const url    = editingId ? `http://localhost:5000/products/${editingId}` : 'http://localhost:5000/products';
+            const url    = editingId ? `${API_URL}/products/${editingId}` : `${API_URL}/products`;
             const method = editingId ? 'PUT' : 'POST';
 
             const res = await fetch(url, {
@@ -331,7 +332,7 @@ const AdminUpload = () => {
                                         <tr key={p.id}>
                                             <td>
                                                 {p.frontimg
-                                                    ? <img src={`/utilities/images/${p.frontimg}`} alt={p.name} className="table-thumb" />
+                                                    ? <img src={`${API_URL}/utilities/images/${p.frontimg}`} alt={p.name} className="table-thumb" />
                                                     : <div className="table-thumb-empty" />
                                                 }
                                             </td>

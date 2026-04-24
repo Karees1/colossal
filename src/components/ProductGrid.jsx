@@ -4,8 +4,9 @@ import { FaHeart, FaShoppingCart } from 'react-icons/fa';
 import { cartManager } from '../utils/cartManager';
 import { favoritesManager } from '../utils/favoritesManager';
 import { showToast } from './Toast';
-import fit17 from "../images/fit4.jpg"; // Fallback image
-import '../components/NewArrivals.css'; // Reuse NewArrivals styling
+import fit17 from "../images/fit4.jpg";
+import '../components/NewArrivals.css';
+import API_URL from '../config';
 
 function ProductGrid({ category: propCategory, title: propTitle }) {
     const { category: paramCategory, subcategory: paramSubcategory } = useParams();
@@ -28,14 +29,14 @@ function ProductGrid({ category: propCategory, title: propTitle }) {
         if (!img) return placeholderImg;
         if (typeof img !== 'string') return placeholderImg;
         if (img.startsWith('http')) return img;
-        return `/utilities/images/${img}`;
+        return `${API_URL}/utilities/images/${img}`;
     };
 
     useEffect(() => {
         const fetchProducts = async () => {
             setLoading(true);
             try {
-                const response = await fetch("http://localhost:5000/products");
+                const response = await fetch(`${API_URL}/products`);
                 if (!response.ok) throw new Error("Failed to fetch products");
 
                 const data = await response.json();
