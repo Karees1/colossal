@@ -1,93 +1,115 @@
 .featured-collection {
-    padding: 80px 20px;
-    background-color: var(--bg-light);
+  padding: 72px 24px;
+  background: var(--bg);
 }
 
 .featured-collection .section-header {
-    text-align: center;
-    margin-bottom: 50px;
+  text-align: center;
+  margin-bottom: 40px;
 }
 
 .featured-collection .section-header h2 {
-    font-family: 'Georgia', serif;
-    color: var(--secondary-gold);
-    font-size: 2.5rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: var(--text);
+  font-size: 2.2rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.featured-collection .section-header p {
+  color: var(--text-dim);
+  font-size: 0.82rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 .collection-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  max-width: 1200px;
+  margin: 0 auto;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
 }
 
 .collection-card {
-    position: relative;
-    height: 600px;
-    /* Large cards */
-    overflow: hidden;
-    border: 1px solid var(--secondary-gold);
-    border-radius: 2px;
-    cursor: pointer;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  height: 520px;
+  overflow: hidden;
+  cursor: pointer;
 }
 
 .collection-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  filter: brightness(0.82);
 }
 
 .collection-card:hover img {
-    transform: scale(1.1);
+  transform: scale(1.06);
+  filter: brightness(0.65);
 }
 
 .collection-content {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 40px 30px;
-    background: linear-gradient(to top, rgba(15, 43, 35, 0.95), rgba(15, 43, 35, 0.6), transparent);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    transform: translateY(20px);
-    transition: transform 0.4s ease;
-}
-
-.collection-card:hover .collection-content {
-    transform: translateY(0);
+  position: absolute;
+  inset: 0;
+  padding: 32px 28px;
+  background: linear-gradient(to top, rgba(10, 24, 16, 0.88) 0%, rgba(10, 24, 16, 0.25) 50%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
 }
 
 .collection-content h3 {
-    color: var(--secondary-gold);
-    font-family: 'Georgia', serif;
-    font-size: 2rem;
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  color: var(--text);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.9rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+  line-height: 1.1;
 }
 
 .collection-btn {
-    padding: 14px 35px;
-    background-color: transparent;
-    border: 2px solid var(--secondary-gold);
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
+  display: inline-block;
+  padding: 10px 26px;
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  text-decoration: none;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.72rem;
+  border-radius: 2px;
+  transition: background 0.25s, color 0.25s;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s, transform 0.3s, background 0.2s, color 0.2s;
+}
+
+.collection-card:hover .collection-btn {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .collection-btn:hover {
-    background-color: var(--secondary-gold);
-    color: var(--primary-green);
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+  background: var(--gold);
+  color: #111;
+}
+
+@media (max-width: 800px) {
+  .collection-grid {
+    grid-template-columns: 1fr;
+    border: none;
+    gap: 8px;
+  }
+  .collection-card { height: 340px; }
+  .collection-btn  { opacity: 1; transform: none; }
 }

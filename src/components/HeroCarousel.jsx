@@ -1,66 +1,88 @@
-import React from "react";
-import Slider from "react-slick";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./HeroCarousel.css";
-import fit1 from "../images/fit1.jpg";
-import fit5 from "../images/fit5.jpg";
-import fit11 from "../images/fit11.jpg";
 
 const slides = [
   {
-    image: fit1,
-    heading: "Dress Sharp. Stand Out.",
-    sub: "Premium shirts & trousers for every occasion",
-    link: "/shirts",
-    cta: "Shop Shirts",
+    label:    "New Season",
+    heading:  "Dress Sharp.\nStand Out.",
+    sub:      "Premium shirts, tailored trousers & formal footwear — all in one place.",
+    link:     "/shirts",
+    cta:      "Shop Shirts",
+    accent:   "#C4A44E",
   },
   {
-    image: fit5,
-    heading: "Step Up Your Sole Game",
-    sub: "Sneakers, boots & formal shoes — all in one place",
-    link: "/footwear",
-    cta: "Shop Footwear",
+    label:    "Footwear Edit",
+    heading:  "Step Into\nConfidence.",
+    sub:      "Sneakers, boots & formal shoes crafted for the modern gentleman.",
+    link:     "/footwear",
+    cta:      "Shop Footwear",
+    accent:   "#8AB09A",
   },
   {
-    image: fit11,
-    heading: "New Arrivals",
-    sub: "Fresh drops — jackets, chinos, accessories & more",
-    link: "/outerwear",
-    cta: "Shop Outerwear",
+    label:    "Outerwear",
+    heading:  "Layer Up.\nOwn the Room.",
+    sub:      "Jackets, blazers & coats for every occasion.",
+    link:     "/outerwear",
+    cta:      "Shop Outerwear",
+    accent:   "#C4A44E",
   },
 ];
 
-function HeroCarousel() {
-  const settings = {
-    dots: true,
-    infinite: true,
-    fade: true,
-    autoplay: true,
-    autoplaySpeed: 4000,
-    arrows: false,
+export default function HeroCarousel() {
+  const [current, setCurrent] = useState(0);
+  const [animating, setAnimating] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setAnimating(true);
+      setTimeout(() => {
+        setCurrent(c => (c + 1) % slides.length);
+        setAnimating(false);
+      }, 400);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const goTo = (idx) => {
+    if (idx === current) return;
+    setAnimating(true);
+    setTimeout(() => { setCurrent(idx); setAnimating(false); }, 400);
   };
+
+  const s = slides[current];
 
   return (
     <div className="hero-carousel">
-      <Slider {...settings}>
-        {slides.map((slide, idx) => (
-          <div key={idx} className="slide">
-            <div
-              className="slide-bg"
-              style={{ backgroundImage: `url(${slide.image})` }}
-            >
-              <div className="overlay" />
-              <div className="content">
-                <h1>{slide.heading}</h1>
-                <p>{slide.sub}</p>
-                <Link to={slide.link} className="hero-cta-btn">{slide.cta}</Link>
-              </div>
-            </div>
-          </div>
+      <div className={`hero-slide ${animating ? "fade-out" : "fade-in"}`}>
+        <div className="hero-label">{s.label}</div>
+        <h1 className="hero-heading" style={{ "--accent": s.accent }}>
+          {s.heading.split("\n").map((line, i) => (
+            <span key={i} className={i === 1 ? "accent-line" : ""}>{line}</span>
+          ))}
+        </h1>
+        <p className="hero-sub">{s.sub}</p>
+        <Link to={s.link} className="hero-cta" style={{ "--accent": s.accent }}>
+          {s.cta}
+        </Link>
+      </div>
+
+      {/* Dots */}
+      <div className="hero-dots">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            className={`hero-dot ${i === current ? "active" : ""}`}
+            onClick={() => goTo(i)}
+            aria-label={`Slide ${i + 1}`}
+          />
         ))}
-      </Slider>
+      </div>
+
+      {/* Side index */}
+      <div className="hero-counter">
+        {String(current + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
+      </div>
     </div>
   );
 }
-
-export default HeroCarousel;

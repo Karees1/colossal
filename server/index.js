@@ -7,6 +7,7 @@ const fs           = require("fs");
 const bcrypt       = require("bcrypt");
 const jwt          = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+const rateLimit    = require("express-rate-limit");
 
 const app  = express();
 const PORT = 5000;
@@ -22,6 +23,10 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
+
+// Static files – serve uploaded images
+const publicDir = path.join(__dirname, "../public");
+app.use(express.static(publicDir));
 
 // ─── DATABASE ────────────────────────────────────────────
 const pool = new Pool({
@@ -67,6 +72,15 @@ const initDB = async () => {
 
 initDB();
 
+// ─── RATE LIMITERS ───────────────────────────────────────
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,  // 15 minutes
+    max: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: "Too many attempts — please try again later." },
+});
+
 // ─── AUTH MIDDLEWARE ─────────────────────────────────────
 const authenticate = (req, res, next) => {
     const header = req.headers.authorization;
@@ -81,21 +95,39 @@ const authenticate = (req, res, next) => {
     }
 };
 
+const adminOnly = (req, res, next) => {
+    authenticate(req, res, () => {
+        if (req.user?.user_type !== "admin")
+            return res.status(403).json({ error: "Admin access required" });
+        next();
+    });
+};
+
 // ─── IMAGE UPLOAD ─────────────────────────────────────────
 const uploadDir = path.join(__dirname, "../public/utilities/images");
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
+const ALLOWED_MIME = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+
 const upload = multer({
     storage: multer.diskStorage({
         destination: (req, file, cb) => cb(null, uploadDir),
-        filename:    (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
+        filename:    (req, file, cb) => {
+            const ext = path.extname(file.originalname).toLowerCase();
+            cb(null, Date.now() + "-" + Math.random().toString(36).slice(2) + ext);
+        },
     }),
+    limits: { fileSize: 5 * 1024 * 1024 },  // 5 MB
+    fileFilter: (req, file, cb) => {
+        if (ALLOWED_MIME.includes(file.mimetype)) cb(null, true);
+        else cb(new Error("Only image files are allowed (JPEG, PNG, WEBP, GIF)"));
+    },
 });
 
 // ─── AUTH ROUTES ──────────────────────────────────────────
 
 // POST /auth/register
-app.post("/auth/register", async (req, res) => {
+app.post("/auth/register", authLimiter, async (req, res) => {
     try {
         const { username, password, user_type = "user" } = req.body;
 
@@ -132,7 +164,7 @@ app.post("/auth/register", async (req, res) => {
 });
 
 // POST /auth/login
-app.post("/auth/login", async (req, res) => {
+app.post("/auth/login", authLimiter, async (req, res) => {
     try {
         const { username, password } = req.body;
 
@@ -281,7 +313,7 @@ app.get("/products/:id", async (req, res) => {
 });
 
 // POST /products  (admin)
-app.post("/products", async (req, res) => {
+app.post("/products", adminOnly, async (req, res) => {
     try {
         const { name, price, category, sub_category, sizes, colors, frontimg, backimg, description, material } = req.body;
 
@@ -298,8 +330,8 @@ app.post("/products", async (req, res) => {
     }
 });
 
-// POST /upload
-app.post("/upload", upload.single("image"), (req, res) => {
+// POST /upload  (admin)
+app.post("/upload", adminOnly, upload.single("image"), (req, res) => {
     try {
         res.json({ filename: req.file.filename });
     } catch (err) {
@@ -309,7 +341,7 @@ app.post("/upload", upload.single("image"), (req, res) => {
 });
 
 // PUT /products/:id  (admin)
-app.put("/products/:id", async (req, res) => {
+app.put("/products/:id", adminOnly, async (req, res) => {
     try {
         const { name, price, category, sub_category, sizes, colors, frontimg, backimg, description, material } = req.body;
 
@@ -332,7 +364,7 @@ app.put("/products/:id", async (req, res) => {
 });
 
 // DELETE /products/:id  (admin)
-app.delete("/products/:id", async (req, res) => {
+app.delete("/products/:id", adminOnly, async (req, res) => {
     try {
         const { rows } = await pool.query("DELETE FROM products WHERE id = $1 RETURNING *", [req.params.id]);
 
@@ -344,6 +376,16 @@ app.delete("/products/:id", async (req, res) => {
         console.error(err.message);
         res.status(500).json({ error: "Server error" });
     }
+});
+
+// ─── ERROR HANDLER ───────────────────────────────────────
+// Catches multer errors (file size / type) and other unhandled errors
+app.use((err, req, res, next) => {
+    if (err.name === "MulterError" || err.message?.includes("image files")) {
+        return res.status(400).json({ error: err.message });
+    }
+    console.error(err.message);
+    res.status(500).json({ error: "Internal server error" });
 });
 
 // ─────────────────────────────────────────────────────────

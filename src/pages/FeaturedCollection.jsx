@@ -10,6 +10,7 @@ const FeaturedCollection = () => {
         <section className="featured-collection">
             <div className="section-header">
                 <h2>Featured Collections</h2>
+                <p>Shop the Season</p>
             </div>
             <div className="collection-grid">
                 <div className="collection-card">
