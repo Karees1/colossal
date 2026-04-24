@@ -1,5 +1,5 @@
 // Simple favorites management using localStorage
-const FAVORITES_KEY = 'colossalGainzFavorites';
+const FAVORITES_KEY = 'gentlemanFavorites';
 
 export const favoritesManager = {
   // Get all favorites

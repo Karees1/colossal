@@ -9,7 +9,7 @@ function Footer() {
       <div className="footer-container">
         {/* Company Info */}
         <div className="footer-section">
-          <h3 className="footer-logo">Colossal Gainz</h3>
+          <h3 className="footer-logo">GENTLEMAN</h3>
           <p className="footer-description">
             Premium gym apparel for every body. Built for performance,
             designed for style — right here in Nairobi.
@@ -89,7 +89,7 @@ function Footer() {
       {/* Bottom Bar */}
       <div className="footer-bottom">
         <div className="footer-bottom-container">
-          <p>&copy; {new Date().getFullYear()} Colossal Gainz. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} GENTLEMAN. All rights reserved.</p>
           <div className="payment-methods">
             <span>Pay on Delivery Available | M-Pesa Accepted</span>
           </div>

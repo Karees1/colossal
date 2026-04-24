@@ -2,24 +2,29 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  background: linear-gradient(180deg, #0e0e0e 0%, #141414 100%);
+  min-height: calc(100vh - 62px);
+  background-color: var(--bg);
+  padding: 40px 16px;
 }
 
 .register-card {
-  background: linear-gradient(180deg, rgba(20, 20, 20, 0.96), rgba(8, 8, 8, 0.96));
-  border-radius: 10px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
-  padding: 36px;
+  background-color: var(--surface);
+  border: 1px solid var(--border-str);
+  border-radius: 2px;
+  padding: 40px 36px;
   width: 100%;
   max-width: 520px;
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  box-shadow: var(--shadow);
 }
 
 .register-card h2 {
-  margin-bottom: 20px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.9rem;
+  letter-spacing: 4px;
   text-align: center;
-  color: #d1d1d1;
+  color: var(--gold);
+  margin-bottom: 28px;
+  text-transform: uppercase;
 }
 
 .form-grid {
@@ -32,60 +37,32 @@
   margin-bottom: 14px;
   display: flex;
   flex-direction: column;
-}
-
-.form-group label {
-  margin-bottom: 8px;
-  color: #b7b7b7;
-  font-weight: 600;
-}
-
-.form-group input {
-  padding: 12px 14px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.02);
-  color: #e6e6e6;
+  gap: 6px;
 }
 
 .submit-btn {
   display: block;
   width: 100%;
-  padding: 12px;
-  background: linear-gradient(90deg, #c59d5f 0%, #b8873f 100%);
-  color: #0b0b0b;
-  border: none;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
+  padding: 13px;
+  margin-top: 8px;
+  font-size: 0.82rem;
 }
 
 .terms {
-  font-size: 13px;
-  color: #b7b7b7;
+  font-size: 0.78rem;
+  color: var(--text-muted);
   margin-top: 12px;
 }
 
-.terms a {
-  color: #c59d5f;
-  text-decoration: none;
-  font-weight: 700;
-}
+.terms a { color: var(--gold); font-weight: 600; }
+.terms a:hover { color: var(--gold-lt); }
 
 .login-link {
   text-align: center;
   margin-top: 20px;
-  color: #b7b7b7;
-  font-size: 14px;
+  color: var(--text-muted);
+  font-size: 0.83rem;
 }
 
-.login-link a {
-  color: #c59d5f;
-  text-decoration: none;
-  font-weight: 700;
-  transition: color 0.15s ease;
-}
-
-.login-link a:hover {
-  color: #b8873f;
-}
+.login-link a { color: var(--gold); font-weight: 600; }
+.login-link a:hover { color: var(--gold-lt); }

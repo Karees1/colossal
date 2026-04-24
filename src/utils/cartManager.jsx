@@ -1,5 +1,5 @@
 // Cart management using localStorage
-const CART_KEY = 'colossalGainzCart';
+const CART_KEY = 'gentlemanCart';
 
 export const cartManager = {
   // Get all cart items

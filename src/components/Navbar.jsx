@@ -20,7 +20,7 @@ function Navbar() {
 
   useEffect(() => {
     const update = () => {
-      const fav = localStorage.getItem('colossalGainzFavorites');
+      const fav = localStorage.getItem('gentlemanFavorites');
       setFavoritesCount(fav ? JSON.parse(fav).length : 0);
     };
     update();
@@ -56,7 +56,7 @@ function Navbar() {
           <FaBars />
         </button>
 
-        <Link to="/" className="brand">Colossal Gainz</Link>
+        <Link to="/" className="brand">GENTLEMAN</Link>
 
         <div className="nav-icons">
           <Link to="/favorites" className="icon-link">
@@ -112,7 +112,7 @@ function Navbar() {
       {/* ── Sidebar ── */}
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <Link to="/" className="sidebar-brand" onClick={closeSidebar}>Colossal Gainz</Link>
+          <Link to="/" className="sidebar-brand" onClick={closeSidebar}>GENTLEMAN</Link>
           <button className="sidebar-close" onClick={closeSidebar} aria-label="Close menu">
             <FaTimes />
           </button>

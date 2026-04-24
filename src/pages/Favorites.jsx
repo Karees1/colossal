@@ -7,7 +7,7 @@ function Favorites() {
 
   // Load favorites from localStorage
   useEffect(() => {
-    const savedFavorites = localStorage.getItem('colossalGainzFavorites');
+    const savedFavorites = localStorage.getItem('gentlemanFavorites');
     if (savedFavorites) {
       setFavorites(JSON.parse(savedFavorites));
     }
@@ -17,7 +17,7 @@ function Favorites() {
   const removeFromFavorites = (productId) => {
     const updatedFavorites = favorites.filter(item => item.id !== productId);
     setFavorites(updatedFavorites);
-    localStorage.setItem('colossalGainzFavorites', JSON.stringify(updatedFavorites));
+    localStorage.setItem('gentlemanFavorites', JSON.stringify(updatedFavorites));
     window.dispatchEvent(new Event('favoritesUpdated'));
   window.dispatchEvent(new Event('storage')); // Add this line
   };
@@ -25,7 +25,7 @@ function Favorites() {
   // Clear all favorites
   const clearAllFavorites = () => {
     setFavorites([]);
-    localStorage.setItem('colossalGainzFavorites', JSON.stringify([]));
+    localStorage.setItem('gentlemanFavorites', JSON.stringify([]));
         window.dispatchEvent(new Event('storage')); // Add this line
 
   };
