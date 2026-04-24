@@ -165,7 +165,7 @@ function Navbar() {
       </ul>
 
       {/* Center Brand */}
-      <Link to="/" className="brand">Gentleman</Link>
+      <Link to="/" className="brand">Colossal Gainz</Link>
 
       {/* Right Icons */}
       <div className="nav-icons">
@@ -210,8 +210,6 @@ function Navbar() {
                     {user?.username || "Welcome"}
                   </div>
                   <Link to="/admin" className="dropdown-item">Admin Panel</Link>
-                  <Link to="/profile" className="dropdown-item">My Profile</Link>
-                  <Link to="/orders" className="dropdown-item">My Orders</Link>
                   <button
                     onClick={() => {
                       logout();

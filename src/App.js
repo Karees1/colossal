@@ -45,6 +45,7 @@ import Register from './pages/Register';
 import Footer from './components/Footer';
 import ProductGrid from './components/ProductGrid';
 import AdminUpload from './pages/AdminUpload';
+import { ToastContainer } from './components/Toast';
 
 function App() {
   return (
@@ -82,6 +83,7 @@ function App() {
           </Routes>
 
           <Footer />
+          <ToastContainer />
         </div>
       </Router>
     </AuthProvider>

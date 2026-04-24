@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Checkout.css';
 import { cartManager } from '../utils/cartManager';
+import { showToast } from '../components/Toast';
 
 function Checkout() {
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
   const [cartTotal, setCartTotal] = useState(0);
   const [activeStep, setActiveStep] = useState(1);
-  const [isSubmitting, setIsSubmitting] = useState(false); // ADD THIS LINE
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -61,7 +63,7 @@ function Checkout() {
 
     // Validate required fields
     if (!formData.fullName || !formData.phone || !formData.county || !formData.estate) {
-      alert('Please fill in all required fields marked with *');
+      showToast('Please fill in all required fields marked with *', 'error');
       setIsSubmitting(false);
       return;
     }
@@ -108,12 +110,11 @@ function Checkout() {
       cartManager.clearCart();
       window.dispatchEvent(new Event('cartUpdated'));
 
-      alert(`✅ Order placed successfully!\nOrder ID: ${body.orderId}`);
-      // Redirect to order confirmation page if you have one
-      // window.location.href = `/order-confirmation/${body.orderId}`;
+      showToast(`Order placed! Order ID: ${body.orderId}`);
+      navigate('/');
     } catch (error) {
       console.error('Order submission error:', error);
-      alert('There was an issue processing your order. Please try again.');
+      showToast('There was an issue processing your order. Please try again.', 'error');
     } finally {
       setIsSubmitting(false);
     }

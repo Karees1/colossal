@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import './FeaturedCollection.css';
 import menImg from '../images/fit17.jpg';
 import womenImg from '../images/fit16.jpg';
+import gearImg from '../images/fit9.jpg';
 
 const FeaturedCollection = () => {
     return (
@@ -26,7 +27,7 @@ const FeaturedCollection = () => {
                     </div>
                 </div>
                 <div className="collection-card">
-                    <img src="/utilities/images/david-lezcano-NfZiOJzZgcg-unsplash.jpg" alt="Gear & Accessories" />
+                    <img src={gearImg} alt="Gear & Accessories" />
                     <div className="collection-content">
                         <h3>Gear & Accessories</h3>
                         <Link to="/gear" className="collection-btn">Shop Gear</Link>

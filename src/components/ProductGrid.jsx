@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { FaHeart, FaShoppingCart } from 'react-icons/fa';
 import { cartManager } from '../utils/cartManager';
 import { favoritesManager } from '../utils/favoritesManager';
+import { showToast } from './Toast';
 import fit17 from "../images/fit4.jpg"; // Fallback image
 import '../components/NewArrivals.css'; // Reuse NewArrivals styling
 
@@ -98,7 +99,7 @@ function ProductGrid({ category: propCategory, title: propTitle }) {
 
         cartManager.addToCart(cartItem);
         window.dispatchEvent(new Event('cartUpdated'));
-        alert(`Added ${productName} to cart!`);
+        showToast(`Added ${productName} to cart!`);
     };
 
     if (loading) return <div className="product-loading">Loading products...</div>;
@@ -133,7 +134,7 @@ function ProductGrid({ category: propCategory, title: propTitle }) {
                                 </Link>
 
                                 <p className="product-title">{displayName}</p>
-                                <p className="price">{typeof product.price === 'number' ? `$${product.price.toFixed(2)}` : product.price}</p>
+                                <p className="price">{typeof product.price === 'number' ? `KSh ${product.price.toFixed(2)}` : product.price}</p>
 
                                 <div className="icons">
                                     <i

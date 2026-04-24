@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { categories } from '../components/categories';
 import './AdminUpload.css';
+import { showToast } from '../components/Toast';
 
 const AdminUpload = () => {
     const [formData, setFormData] = useState({
@@ -81,19 +82,18 @@ const AdminUpload = () => {
             });
 
             if (response.ok) {
-                alert('Product Uploaded Successfully!');
-                // Reset form
+                showToast('Product uploaded successfully!');
                 setFormData({ ...formData, name: '', price: '', description: '' });
                 setSizes([]);
                 setColors([]);
                 setFrontImgFile(null);
                 setBackImgFile(null);
             } else {
-                alert('Failed to upload product');
+                showToast('Failed to upload product', 'error');
             }
         } catch (err) {
             console.error(err);
-            alert('Error uploading product');
+            showToast('Error uploading product', 'error');
         }
         setLoading(false);
     };

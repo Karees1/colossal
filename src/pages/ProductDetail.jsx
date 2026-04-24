@@ -5,6 +5,7 @@ import { FaHeart, FaShoppingCart, FaStar, FaTruck, FaShieldAlt, FaExchangeAlt } 
 import placeholderImg from "../images/fit17.jpg";
 import { cartManager } from '../utils/cartManager';
 import { favoritesManager } from '../utils/favoritesManager';
+import { showToast } from '../components/Toast';
 
 function ProductDetail() {
   const { productId } = useParams();
@@ -108,12 +109,12 @@ function ProductDetail() {
   const handleAddToCart = () => {
     // Validate selections
     if (hasSizes && !selectedSize) {
-      alert('Please select a size before adding to cart');
+      showToast('Please select a size first', 'error');
       return;
     }
 
     if (hasColors && !selectedColor) {
-      alert('Please select a color before adding to cart');
+      showToast('Please select a color first', 'error');
       return;
     }
 
@@ -132,21 +133,20 @@ function ProductDetail() {
     // Add to cart
     cartManager.addToCart(cartItem);
     window.dispatchEvent(new Event('cartUpdated'));
-
-    // Show success message
-    alert(`✅ Added ${quantity}x ${productName} to cart!`);
+    showToast(`Added ${quantity}× ${productName} to cart!`);
   };
 
   const handleAddToFavorites = () => {
     favoritesManager.addToFavorites(product);
-    alert(`❤️ Added ${productName} to favorites!`);
+    showToast(`Added ${productName} to favorites!`);
+    window.dispatchEvent(new Event('favoritesUpdated'));
   };
 
   // Determine button text and state
   const getAddToCartButtonText = () => {
     if (hasSizes && !selectedSize) return 'Select Size First';
     if (hasColors && !selectedColor) return 'Select Color First';
-    return `Add to Cart - $${totalPrice.toFixed(2)}`;
+    return `Add to Cart — KSh ${totalPrice.toFixed(2)}`;
   };
 
   const isAddToCartDisabled = (hasSizes && !selectedSize) || (hasColors && !selectedColor);
@@ -197,7 +197,7 @@ function ProductDetail() {
               </div>
               <span className="rating-text">(42 reviews)</span>
             </div>
-            <p className="product-price">${productPrice.toFixed(2)}</p>
+            <p className="product-price">KSh {productPrice.toFixed(2)}</p>
           </div>
 
           <p className="product-description">{product.description}</p>
@@ -347,12 +347,12 @@ function ProductDetail() {
                   </div>
                   <div className="similar-product-info">
                     <p className="similar-product-title">{sName}</p>
-                    <span className="similar-product-price">${typeof similarProduct.price === 'number' ? similarProduct.price.toFixed(2) : similarProduct.price}</span>
+                    <span className="similar-product-price">KSh {typeof similarProduct.price === 'number' ? similarProduct.price.toFixed(2) : similarProduct.price}</span>
                     <button
                       className="quick-add-btn"
                       onClick={(e) => {
                         e.preventDefault();
-                        alert(`Added ${sName} to cart!`);
+                        showToast(`Added ${sName} to cart!`);
                       }}
                     >
                       Quick Add

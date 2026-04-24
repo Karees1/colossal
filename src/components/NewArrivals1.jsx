@@ -4,6 +4,7 @@ import { FaHeart, FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { cartManager } from "../utils/cartManager";
 import { favoritesManager } from "../utils/favoritesManager";
+import { showToast } from "./Toast";
 
 // Keep your image imports as a fallback/placeholder
 import fit17 from "../images/fit4.jpg";
@@ -68,7 +69,7 @@ function NewArrivals() {
 
         cartManager.addToCart(cartItem);
         window.dispatchEvent(new Event('cartUpdated'));
-        alert(`Added ${cartItem.title} to cart!`);
+        showToast(`Added ${cartItem.title} to cart!`);
     };
 
     return (
@@ -123,7 +124,7 @@ function NewArrivals() {
                             {/* Price Logic */}
                             <p className="price">
                                 {typeof product.price === 'number'
-                                    ? `$${product.price}`
+                                    ? `KSh ${product.price}`
                                     : product.price}
                             </p>
 

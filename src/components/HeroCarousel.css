@@ -39,10 +39,18 @@
     letter-spacing: 4px;
   }
   
-  .content button {
-    margin-top: 20px;
-    padding: 14px 32px;
-    background-color: #b7b7b7;
+  .content p {
+    color: #d1d1d1;
+    font-size: 18px;
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
+
+  .hero-cta-btn {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 14px 36px;
+    background-color: #c59d5f;
     color: #111;
     border: none;
     font-weight: 700;
@@ -50,9 +58,11 @@
     cursor: pointer;
     transition: all 0.3s ease;
     border-radius: 4px;
+    text-decoration: none;
+    letter-spacing: 1px;
   }
-  
-  .content button:hover {
+
+  .hero-cta-btn:hover {
     background-color: #fff;
     transform: scale(1.05);
   }
