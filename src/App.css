@@ -27,6 +27,27 @@
 .App-link {
   color: #61dafb;
 }
+/* Stop all horizontal overflow */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+  background-color: #1a1a1a; /* Our main dark background */
+}
+
+/* Ensure main content never exceeds screen width */
+* {
+  box-sizing: border-box;
+}
+
+/* Optional: restrict max container width for clean centered layout */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
 
 @keyframes App-logo-spin {
   from {

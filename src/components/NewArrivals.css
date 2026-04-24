@@ -1,0 +1,183 @@
+.new-arrivals-section {
+  background: transparent;
+  padding: 60px 0;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.section-header h2 {
+  font-size: 2rem;
+  letter-spacing: 1px;
+  color: var(--secondary-gold);
+}
+
+.mini-nav {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-size: 0.9rem;
+  color: #c2c2c2;
+  cursor: pointer;
+}
+
+.mini-nav span:hover {
+  color: #c59d5f;
+  transition: 0.3s;
+}
+
+.product-scroll {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 10px 40px;
+  scrollbar-width: thin;
+  scrollbar-color: #444 #111;
+  scroll-behavior: smooth;
+}
+
+.product-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.product-scroll::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 8px;
+}
+
+.product-card {
+  flex: 0 0 auto;
+  width: 240px;
+  background: var(--card-bg);
+  padding: 0;
+  border-radius: 12px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+}
+
+
+/* Your existing code (Perfect) */
+.image-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/4;
+  /* Keeps rectangle shape consistent */
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+}
+
+.image-wrap img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.4s ease-in-out;
+}
+
+/* Hide the 2nd image (Back) by default */
+.image-wrap img:nth-child(2) {
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+  /* Ensures it sits ON TOP of the first image */
+}
+
+/* --- THE NEW PART YOU NEED --- */
+/* When hovering the WRAPPER, show the 2nd image */
+.image-wrap:hover img:nth-child(2) {
+  opacity: 1;
+}
+
+
+
+.product-card:hover .image-wrap img:nth-child(1) {
+  opacity: 0;
+}
+
+.product-card:hover .image-wrap img:nth-child(2) {
+  opacity: 1;
+}
+
+.product-title {
+  margin: 12px 0 4px !important;
+  font-size: 0.95rem !important;
+  /* Force small size */
+  text-transform: capitalize !important;
+  color: #eee !important;
+  font-family: "Poppins", sans-serif !important;
+  font-weight: normal !important;
+  line-height: normal !important;
+}
+
+.price {
+  color: #c59d5f !important;
+  font-weight: bold !important;
+  margin-bottom: 8px !important;
+  font-family: "Poppins", sans-serif !important;
+  font-size: 1rem !important;
+  /* Explicit size */
+}
+
+.icons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: 0.3s ease;
+  margin-bottom: 12px;
+}
+
+.product-card:hover .icons {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.icons i {
+  background: #c59d5f;
+  color: #111;
+  padding: 6px 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s;
+  font-style: normal;
+  font-size: 0.9rem;
+}
+
+.icons i:hover {
+  background: #353432;
+}
+
+.icons i.favorited {
+  color: #ff0000 !important;
+  background: #fff !important;
+}
+
+.icons i.favorited:hover {
+  background: #ff0000 !important;
+  color: #fff !important;
+}
+
+.product-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  cursor: pointer;
+}
+
+/* Remove any link styling inheritance */
+.product-link * {
+  text-decoration: none !important;
+  color: inherit !important;
+}

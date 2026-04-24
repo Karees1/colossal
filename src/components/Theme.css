@@ -1,0 +1,145 @@
+:root {
+    --primary-green: #1B4D3E;
+    /* Deep Forest Green */
+    --secondary-gold: #D4AF37;
+    /* Metallic Gold */
+    --text-dark: #F4F1EA;
+    /* Cream/Off-White for dark background */
+    --bg-light: #0F2B23;
+    /* Very Dark Green Body */
+    --card-bg: #163E32;
+    /* Slightly lighter green for cards */
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+}
+
+/* --- Navbar Overrides --- */
+.navbar {
+    background-color: var(--primary-green) !important;
+    border-bottom: 3px solid var(--secondary-gold);
+}
+
+.brand {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: var(--secondary-gold) !important;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.nav-link,
+.icon-link .icon {
+    color: #ecf0f1 !important;
+}
+
+.nav-link:hover,
+.icon-link:hover .icon {
+    color: var(--secondary-gold) !important;
+}
+
+.dropdown-menu,
+.user-dropdown-menu {
+    background-color: var(--primary-green) !important;
+    border: 1px solid var(--secondary-gold) !important;
+}
+
+.dropdown-item {
+    color: white !important;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(212, 175, 55, 0.2) !important;
+    color: var(--secondary-gold) !important;
+}
+
+/* --- Footer Overrides --- */
+.footer {
+    background-color: #113026 !important;
+    /* Darker Green */
+    border-top: 4px solid var(--secondary-gold);
+}
+
+.footer-logo {
+    color: var(--secondary-gold) !important;
+    font-family: 'Georgia', serif;
+}
+
+/* --- Button Overrides --- */
+button {
+    border-radius: 2px !important;
+    /* Sharper, classier edges */
+}
+
+.add-to-cart-btn,
+.newsletter-btn,
+.quick-add-btn {
+    background-color: var(--primary-green) !important;
+    border: 1px solid var(--secondary-gold) !important;
+}
+
+/* --- Global Typography & Forms (Applies to Admin, Login, Register) --- */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: var(--secondary-gold);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+select,
+textarea {
+    border: 1px solid #ccc !important;
+    border-radius: 2px;
+    padding: 10px;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--secondary-gold) !important;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+    background-color: #ffffff !important;
+}
+
+/* --- Product Cards (Global Theme) --- */
+.product-card {
+    border: 1px solid var(--primary-green) !important;
+    background-color: var(--card-bg) !important;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+.product-card:hover {
+    border-color: var(--secondary-gold) !important;
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.15) !important;
+    transform: translateY(-5px);
+}
+
+.product-title {
+    font-family: 'Georgia', 'Times New Roman', serif !important;
+    color: var(--secondary-gold) !important;
+    font-size: 1.1rem;
+}
+
+.price {
+    color: var(--text-dark) !important;
+    font-weight: 600;
+    font-family: 'Helvetica Neue', sans-serif;
+}
+
+.icons i:hover {
+    color: var(--secondary-gold) !important;
+}
