@@ -1,88 +1,68 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import API_URL from '../config';
+import { supabase } from '../lib/supabaseClient';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [accessToken, setAccessToken] = useState(null);
+  const [session, setSession] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem('accessToken');
-    const storedUser  = localStorage.getItem('user');
-    if (storedToken) {
-      setAccessToken(storedToken);
-      if (storedUser) setUser(JSON.parse(storedUser));
-    }
+  const fetchProfile = async (userId) => {
+    const { data } = await supabase
+      .from('profiles')
+      .select('user_type')
+      .eq('id', userId)
+      .single();
+    setProfile(data);
     setIsLoading(false);
+  };
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session?.user) fetchProfile(session.user.id);
+      else setIsLoading(false);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      } else {
+        setProfile(null);
+        setIsLoading(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  const login = async (username, password) => {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
-      credentials: 'include',
-    });
-    if (!response.ok) {
-      const err = await response.json();
-      throw new Error(err.error || 'Login failed');
-    }
-    const data = await response.json();
-    setAccessToken(data.accessToken);
-    setUser(data.user);
-    localStorage.setItem('accessToken', data.accessToken);
-    localStorage.setItem('user', JSON.stringify(data.user));
+  const login = async (email, password) => {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw new Error(error.message);
     return data;
   };
 
-  const register = async (username, password, user_type) => {
-    const response = await fetch(`${API_URL}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password, user_type }),
-      credentials: 'include',
-    });
-    if (!response.ok) {
-      const err = await response.json();
-      throw new Error(err.error || 'Registration failed');
-    }
-    const data = await response.json();
-    setAccessToken(data.accessToken);
-    setUser(data.user);
-    localStorage.setItem('accessToken', data.accessToken);
-    localStorage.setItem('user', JSON.stringify(data.user));
+  const register = async (email, password) => {
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) throw new Error(error.message);
     return data;
   };
 
   const logout = async () => {
-    try {
-      await fetch(`${API_URL}/auth/logout`, { method: 'POST', credentials: 'include' });
-    } catch {}
-    setAccessToken(null);
-    setUser(null);
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('user');
+    await supabase.auth.signOut();
   };
 
-  const refreshToken = async () => {
-    const response = await fetch(`${API_URL}/auth/refresh`, {
-      method: 'POST',
-      credentials: 'include',
-    });
-    if (!response.ok) { logout(); throw new Error('Token refresh failed'); }
-    const data = await response.json();
-    setAccessToken(data.accessToken);
-    localStorage.setItem('accessToken', data.accessToken);
-    return data.accessToken;
-  };
+  const user = session?.user
+    ? { id: session.user.id, email: session.user.email, user_type: profile?.user_type || 'user' }
+    : null;
 
   return (
     <AuthContext.Provider value={{
-      user, accessToken, isLoading,
-      login, register, logout, refreshToken,
-      isAuthenticated: !!accessToken,
+      user, session, isLoading,
+      login, register, logout,
+      isAuthenticated: !!session,
     }}>
       {children}
     </AuthContext.Provider>

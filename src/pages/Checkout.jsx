@@ -3,13 +3,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Checkout.css';
 import { cartManager } from '../utils/cartManager';
 import { showToast } from '../components/Toast';
-import API_URL from '../config';
+import { supabase } from '../lib/supabaseClient';
+import { useAuth } from '../context/AuthContext';
 
 function Checkout() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [cartItems, setCartItems] = useState([]);
   const [cartTotal, setCartTotal] = useState(0);
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form state
@@ -69,11 +71,7 @@ function Checkout() {
       return;
     }
 
-    // Calculate totals
-    const deliveryFee = formData.deliveryOption === 'express' ? 200 : 100;
-    const finalTotal = cartTotal + deliveryFee;
-
-    // Build items payload expected by backend
+    // Build items payload
     const itemsPayload = cartItems.map(item => ({
       product_id: item.id,
       title: item.title,
@@ -84,7 +82,7 @@ function Checkout() {
     }));
 
     const orderPayload = {
-      userId: null,
+      user_id: user?.id ?? null,
       items: itemsPayload,
       shipping: formData,
       billing: formData,
@@ -92,26 +90,19 @@ function Checkout() {
     };
 
     try {
-      // POST to backend
-      const res = await fetch(`${API_URL}/api/orders`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(orderPayload)
-      });
+      const { data: order, error } = await supabase
+        .from('orders')
+        .insert(orderPayload)
+        .select()
+        .single();
 
-      if (!res.ok) {
-        const errBody = await res.json().catch(() => ({}));
-        throw new Error(errBody.error || 'Failed to create order');
-      }
-
-      const body = await res.json();
+      if (error) throw new Error(error.message || 'Failed to create order');
 
       // Clear cart
       cartManager.clearCart();
       window.dispatchEvent(new Event('cartUpdated'));
 
-      showToast(`Order placed! Order ID: ${body.orderId}`);
+      showToast(`Order placed! Order ID: ${order.id}`);
       navigate('/');
     } catch (error) {
       console.error('Order submission error:', error);

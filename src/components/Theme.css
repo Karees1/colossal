@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Montserrat:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
 /* ═══════════════════════════════════════
    GENTLEMAN — COLOUR TOKENS
@@ -19,6 +19,9 @@
   --border-str:   rgba(46, 112, 80, 0.45);
   --danger:       #B83C3C;
   --shadow:       0 4px 20px rgba(0, 0, 0, 0.50);
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans:  'Montserrat', sans-serif;
+  --mono:  'JetBrains Mono', ui-monospace, Menlo, monospace;
 }
 
 /* ═══════════════════════════════════════

@@ -85,7 +85,7 @@ function Navbar() {
                 {isAuthenticated ? (
                   <>
                     <div className="dropdown-header">
-                      {user?.username || "Welcome"}
+                      {user?.email || "Welcome"}
                       {user?.user_type === 'admin' && <span className="admin-badge">Admin</span>}
                     </div>
                     {user?.user_type === 'admin' && (

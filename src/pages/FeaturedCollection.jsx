@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './FeaturedCollection.css';
+import whiteShirtFront from '../images/white_shirt_front.png';
+import trousersImg from '../images/tr.jpg';
+import denimJeansImg from '../images/denim-jeans.jpg';
 
 const collections = [
     {
@@ -8,21 +11,21 @@ const collections = [
         heading: 'The Shirt Edit',
         link:    '/shirts',
         cta:     'Shop Shirts',
-        img:     '/utilities/images/white_shirt_front.png',
+        img:     whiteShirtFront,
     },
     {
         label:   'Trousers',
         heading: 'Tailored Trousers',
         link:    '/trousers',
         cta:     'Shop Trousers',
-        img:     '/utilities/images/tr.jpg',
+        img:     trousersImg,
     },
     {
         label:   'Denim',
         heading: 'Premium Denim',
         link:    '/trousers',
         cta:     'Shop Jeans',
-        img:     '/utilities/images/denim-jeans.jpg',
+        img:     denimJeansImg,
     },
 ];
 

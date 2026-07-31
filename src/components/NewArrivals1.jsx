@@ -6,17 +6,16 @@ import { cartManager } from "../utils/cartManager";
 import { favoritesManager } from "../utils/favoritesManager";
 import { showToast } from "./Toast";
 import fit17 from "../images/fit4.jpg";
-import API_URL from "../config";
+import { supabase } from "../lib/supabaseClient";
+import { resolveImageUrl as resolveStorageUrl } from "../utils/resolveImageUrl";
 
 const placeholderImg = fit17;
 
 function resolveImageUrl(img) {
-    if (!img) return placeholderImg;
-    if (img.startsWith('http')) return img;
-    return `${API_URL}/utilities/images/${img}`;
+    return resolveStorageUrl(img, placeholderImg);
 }
 function NewArrivals() {
-    const [favorites, setFavorites] = useState([]);
+    const [, setFavorites] = useState([]);
 
     // <--- 1. NEW STATE: To hold products from the database
     const [dbProducts, setDbProducts] = useState([]);
@@ -26,16 +25,14 @@ function NewArrivals() {
         fetchProducts(); // <--- Call the fetcher on load
     }, []);
 
-    // <--- 2. THE FETCHER: Get data from Port 5000
+    // <--- 2. THE FETCHER: Get products from Supabase
     const fetchProducts = async () => {
-        try {
-            const response = await fetch(`${API_URL}/products`);
-            const data = await response.json();
-            console.log("New Arrivals loaded:", data);
-            setDbProducts(data);
-        } catch (err) {
-            console.error("Error fetching products:", err.message);
+        const { data, error } = await supabase.from('products').select('*');
+        if (error) {
+            console.error("Error fetching products:", error.message);
+            return;
         }
+        setDbProducts(data);
     };
 
     const handleFavoriteClick = (product) => {

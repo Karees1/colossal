@@ -6,7 +6,8 @@ import { favoritesManager } from '../utils/favoritesManager';
 import { showToast } from './Toast';
 import fit17 from "../images/fit4.jpg";
 import '../components/NewArrivals.css';
-import API_URL from '../config';
+import { supabase } from '../lib/supabaseClient';
+import { resolveImageUrl as resolveStorageUrl } from '../utils/resolveImageUrl';
 
 function ProductGrid({ category: propCategory, title: propTitle }) {
     const { category: paramCategory, subcategory: paramSubcategory } = useParams();
@@ -19,39 +20,29 @@ function ProductGrid({ category: propCategory, title: propTitle }) {
         : (category ? `${category.charAt(0).toUpperCase() + category.slice(1)}'s Collection` : 'Products'));
 
     const [products, setProducts] = useState([]);
-    const [favorites, setFavorites] = useState([]);
+    const [, setFavorites] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     const placeholderImg = fit17;
 
-    const resolveImageUrl = (img) => {
-        if (!img) return placeholderImg;
-        if (typeof img !== 'string') return placeholderImg;
-        if (img.startsWith('http')) return img;
-        return `${API_URL}/utilities/images/${img}`;
-    };
+    const resolveImageUrl = (img) => resolveStorageUrl(img, placeholderImg);
 
     useEffect(() => {
         const fetchProducts = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`${API_URL}/products`);
-                if (!response.ok) throw new Error("Failed to fetch products");
+                let query = supabase.from('products').select('*');
+                if (category) query = query.ilike('category', category);
 
-                const data = await response.json();
+                const { data, error: fetchError } = await query;
+                if (fetchError) throw new Error(fetchError.message);
 
-                // Filter by category and subcategory if provided
+                // Filter by subcategory if provided (kebab-case URL vs DB string)
                 let filtered = data;
-
-                if (category) {
-                    filtered = filtered.filter(p => p.category && p.category.toLowerCase() === category.toLowerCase());
-                }
-
                 if (subCategory) {
                     filtered = filtered.filter(p => {
                         if (!p.sub_category) return false;
-                        // Convert DB sub_category to kebab-case to compare with URL
                         const dbSub = p.sub_category.toLowerCase().replace(/ & /g, '-').replace(/\s+/g, '-');
                         return dbSub === subCategory.toLowerCase();
                     });

@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import './Login.css';
 
 const Login = () => {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +17,7 @@ const Login = () => {
         setIsLoading(true);
 
         try {
-            await login(username, password);
+            await login(email, password);
             navigate('/'); // Redirect to home on success
         } catch (err) {
             setError(err.message || 'Login failed. Please try again.');
@@ -33,15 +33,15 @@ const Login = () => {
                 {error && <div className="error-message">{error}</div>}
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="email">Email</label>
                         <input
-                            id="username"
-                            type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            id="email"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             required
                             disabled={isLoading}
-                            placeholder="Enter your username"
+                            placeholder="Enter your email"
                         />
                     </div>
                     <div className="form-group">

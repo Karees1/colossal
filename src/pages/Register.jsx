@@ -4,10 +4,9 @@ import { useAuth } from '../context/AuthContext';
 import './Register.css';
 
 const Register = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [userType, setUserType] = useState('user');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { register } = useAuth();
@@ -31,7 +30,7 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      await register(username, password, userType);
+      await register(email, password);
       navigate('/'); // Redirect to home on success
     } catch (err) {
       setError(err.message || 'Registration failed. Please try again.');
@@ -47,15 +46,15 @@ const Register = () => {
         {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="email">Email</label>
             <input
-              id="username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               disabled={isLoading}
-              placeholder="Choose a username"
+              placeholder="Enter your email"
             />
           </div>
           <div className="form-group">
@@ -81,18 +80,6 @@ const Register = () => {
               disabled={isLoading}
               placeholder="••••••••"
             />
-          </div>
-          <div className="form-group">
-            <label htmlFor="userType">Account Type</label>
-            <select
-              id="userType"
-              value={userType}
-              onChange={(e) => setUserType(e.target.value)}
-              disabled={isLoading}
-            >
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
           </div>
           <button type="submit" disabled={isLoading} className="submit-btn">
             {isLoading ? 'Creating Account...' : 'Sign Up'}

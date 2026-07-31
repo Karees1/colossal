@@ -2,15 +2,24 @@ import React, { useState, useEffect, useRef } from 'react';
 import { categories } from '../components/categories';
 import './AdminUpload.css';
 import { showToast } from '../components/Toast';
-import API_URL from '../config';
+import { supabase } from '../lib/supabaseClient';
+import { resolveImageUrl } from '../utils/resolveImageUrl';
 
-const authHeader = () => ({
-    'Authorization': `Bearer ${localStorage.getItem('accessToken') || ''}`,
-});
+const BUCKET = 'products';
 
 const EMPTY_FORM = {
     name: '', price: '', category: 'Shirts',
     sub_category: '', description: '', material: ''
+};
+
+const buildStoragePath = (file) => {
+    const ext = file.name.includes('.') ? file.name.slice(file.name.lastIndexOf('.')) : '';
+    const base = file.name.slice(0, file.name.length - ext.length)
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    const random = Math.random().toString(36).slice(2, 8);
+    return `${Date.now()}-${random}-${base || 'image'}${ext}`;
 };
 
 const AdminUpload = () => {
@@ -32,11 +41,11 @@ const AdminUpload = () => {
     useEffect(() => { loadProducts(); }, []);
 
     const loadProducts = async () => {
-        try {
-            const res  = await fetch(`${API_URL}/products`);
-            const data = await res.json();
-            setProducts(Array.isArray(data) ? data : []);
-        } catch { /* server may be offline */ }
+        const { data, error } = await supabase
+            .from('products')
+            .select('*')
+            .order('created_at', { ascending: false });
+        if (!error) setProducts(Array.isArray(data) ? data : []);
     };
 
     const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -60,16 +69,10 @@ const AdminUpload = () => {
     };
 
     const uploadImage = async (file) => {
-        const data = new FormData();
-        data.append('image', file);
-        const res  = await fetch(`${API_URL}/upload`, {
-            method: 'POST',
-            headers: authHeader(),
-            body: data,
-        });
-        const json = await res.json();
-        if (!res.ok) throw new Error(json.error || 'Upload failed');
-        return json.filename;
+        const path = buildStoragePath(file);
+        const { error } = await supabase.storage.from(BUCKET).upload(path, file);
+        if (error) throw new Error(error.message || 'Upload failed');
+        return path;
     };
 
     const resetForm = () => {
@@ -96,12 +99,8 @@ const AdminUpload = () => {
         });
         setSizes(Array.isArray(product.sizes) ? product.sizes : []);
         setColors(Array.isArray(product.colors) ? product.colors : []);
-        setFrontPreview(product.frontimg
-            ? `${API_URL}/utilities/images/${product.frontimg}`
-            : null);
-        setBackPreview(product.backimg
-            ? `${API_URL}/utilities/images/${product.backimg}`
-            : null);
+        setFrontPreview(resolveImageUrl(product.frontimg));
+        setBackPreview(resolveImageUrl(product.backimg));
         setFrontImgFile(null);
         setBackImgFile(null);
         setEditingId(product.id);
@@ -111,19 +110,12 @@ const AdminUpload = () => {
 
     const handleDelete = async (id) => {
         if (!window.confirm('Delete this product?')) return;
-        try {
-            const res = await fetch(`${API_URL}/products/${id}`, {
-                method: 'DELETE',
-                headers: authHeader(),
-            });
-            if (res.ok) {
-                showToast('Product deleted');
-                setProducts(prev => prev.filter(p => p.id !== id));
-            } else {
-                showToast('Failed to delete product', 'error');
-            }
-        } catch {
-            showToast('Server error', 'error');
+        const { error } = await supabase.from('products').delete().eq('id', id);
+        if (!error) {
+            showToast('Product deleted');
+            setProducts(prev => prev.filter(p => p.id !== id));
+        } else {
+            showToast('Failed to delete product', 'error');
         }
     };
 
@@ -131,45 +123,39 @@ const AdminUpload = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            let frontFilename = editingId && !frontImgFile
-                ? (products.find(p => p.id === editingId)?.frontimg || '')
-                : '';
-            let backFilename = editingId && !backImgFile
-                ? (products.find(p => p.id === editingId)?.backimg || '')
-                : '';
+            let frontPath = editingId && !frontImgFile
+                ? (products.find(p => p.id === editingId)?.frontimg || null)
+                : null;
+            let backPath = editingId && !backImgFile
+                ? (products.find(p => p.id === editingId)?.backimg || null)
+                : null;
 
-            if (frontImgFile) frontFilename = await uploadImage(frontImgFile);
-            if (backImgFile)  backFilename  = await uploadImage(backImgFile);
+            if (frontImgFile) frontPath = await uploadImage(frontImgFile);
+            if (backImgFile)  backPath  = await uploadImage(backImgFile);
 
             const productData = {
                 ...formData,
                 price: parseFloat(formData.price),
                 sizes,
                 colors,
-                frontimg: frontFilename,
-                backimg:  backFilename,
+                frontimg: frontPath,
+                backimg:  backPath,
             };
 
-            const url    = editingId ? `${API_URL}/products/${editingId}` : `${API_URL}/products`;
-            const method = editingId ? 'PUT' : 'POST';
+            const { error } = editingId
+                ? await supabase.from('products').update(productData).eq('id', editingId)
+                : await supabase.from('products').insert(productData);
 
-            const res = await fetch(url, {
-                method,
-                headers: { 'Content-Type': 'application/json', ...authHeader() },
-                body: JSON.stringify(productData),
-            });
-
-            if (res.ok) {
+            if (!error) {
                 showToast(editingId ? 'Product updated!' : 'Product uploaded!');
                 resetForm();
                 loadProducts();
             } else {
-                const err = await res.json();
-                showToast(err.error || 'Failed to save product', 'error');
+                showToast(error.message || 'Failed to save product', 'error');
             }
         } catch (err) {
             console.error(err);
-            showToast('Error saving product', 'error');
+            showToast(err.message || 'Error saving product', 'error');
         }
         setLoading(false);
     };
@@ -332,7 +318,7 @@ const AdminUpload = () => {
                                         <tr key={p.id}>
                                             <td>
                                                 {p.frontimg
-                                                    ? <img src={`${API_URL}/utilities/images/${p.frontimg}`} alt={p.name} className="table-thumb" />
+                                                    ? <img src={resolveImageUrl(p.frontimg)} alt={p.name} className="table-thumb" />
                                                     : <div className="table-thumb-empty" />
                                                 }
                                             </td>
