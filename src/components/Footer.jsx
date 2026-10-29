@@ -66,7 +66,7 @@ function Footer() {
             </div>
             <div className="contact-item">
               <FaEnvelope className="contact-icon" />
-              <span>info@colossalgainz.co.ke</span>
+              <span>info@gentleman.co.ke</span>
             </div>
           </div>
 

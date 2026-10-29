@@ -3,7 +3,7 @@ export const emailService = {
     sendOrderNotification: async (orderData) => {
       try {
         console.log('📧 ORDER NOTIFICATION (Would send email):', {
-          to: 'admin@colossalgainz.com',
+          to: 'admin@gentleman.co.ke',
           subject: `New Order - ${orderData.id}`,
           order: orderData
         });
