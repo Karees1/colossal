@@ -4,7 +4,7 @@ import { FaHeart, FaShoppingCart } from 'react-icons/fa';
 import { cartManager } from '../utils/cartManager';
 import { favoritesManager } from '../utils/favoritesManager';
 import { showToast } from './Toast';
-import fit17 from "../images/fit4.jpg";
+import placeholderImg from "../images/placeholder.svg";
 import '../components/NewArrivals.css';
 import { supabase } from '../lib/supabaseClient';
 import { resolveImageUrl as resolveStorageUrl } from '../utils/resolveImageUrl';
@@ -23,8 +23,6 @@ function ProductGrid({ category: propCategory, title: propTitle }) {
     const [, setFavorites] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    const placeholderImg = fit17;
 
     const resolveImageUrl = (img) => resolveStorageUrl(img, placeholderImg);
 

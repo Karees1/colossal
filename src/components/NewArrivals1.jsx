@@ -5,11 +5,9 @@ import { Link } from "react-router-dom";
 import { cartManager } from "../utils/cartManager";
 import { favoritesManager } from "../utils/favoritesManager";
 import { showToast } from "./Toast";
-import fit17 from "../images/fit4.jpg";
+import placeholderImg from "../images/placeholder.svg";
 import { supabase } from "../lib/supabaseClient";
 import { resolveImageUrl as resolveStorageUrl } from "../utils/resolveImageUrl";
-
-const placeholderImg = fit17;
 
 function resolveImageUrl(img) {
     return resolveStorageUrl(img, placeholderImg);

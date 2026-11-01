@@ -6,7 +6,7 @@ export const categories = {
         "Chinos", "Jeans", "Formal Trousers", "Shorts"
     ],
     "Outerwear": [
-        "Jackets", "Blazers", "Coats", "Hoodies"
+        "Suits", "Jackets", "Blazers", "Coats", "Hoodies"
     ],
     "Footwear": [
         "Sneakers", "Formal Shoes", "Boots", "Sandals"
@@ -15,6 +15,6 @@ export const categories = {
         "Underwear", "Socks", "Vests"
     ],
     "Accessories": [
-        "Belts", "Caps", "Bags", "Wallets"
+        "Belts", "Ties", "Bowties", "Caps", "Bags", "Wallets"
     ]
 };

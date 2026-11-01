@@ -11,8 +11,8 @@ function Footer() {
         <div className="footer-section">
           <h3 className="footer-logo">GENTLEMAN</h3>
           <p className="footer-description">
-            Premium gym apparel for every body. Built for performance,
-            designed for style — right here in Nairobi.
+            Tailored menswear, considered construction — hand-finished
+            at our Nairobi atelier and built to last.
           </p>
           <div className="social-links">
             <a href="https://facebook.com" aria-label="Facebook">

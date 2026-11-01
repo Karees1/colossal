@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useLayoutEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import './ProductDetail.css';
-import placeholderImg from "../images/fit17.jpg";
+import placeholderImg from "../images/placeholder.svg";
 import { cartManager } from '../utils/cartManager';
 import { favoritesManager } from '../utils/favoritesManager';
 import { showToast } from '../components/Toast';
