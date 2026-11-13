@@ -6,10 +6,12 @@ import './ProductGridSection.css';
 function ProductGridSection({ title, products, viewAllHref }) {
   return (
     <section className="pgs-section">
-      <div className="pgs-header">
-        <h2>{title}</h2>
-        {viewAllHref && <Link to={viewAllHref} className="pgs-viewall">View all pieces →</Link>}
-      </div>
+      {(title || viewAllHref) && (
+        <div className="pgs-header">
+          {title && <h2>{title}</h2>}
+          {viewAllHref && <Link to={viewAllHref} className="pgs-viewall">View all pieces →</Link>}
+        </div>
+      )}
 
       {products.length === 0 ? (
         <p className="pgs-empty">Nothing here yet.</p>

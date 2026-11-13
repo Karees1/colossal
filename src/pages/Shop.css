@@ -1,0 +1,31 @@
+.shop-page { max-width: 1440px; margin: 0 auto; padding: clamp(40px, 6vw, 72px) clamp(20px, 5vw, 72px) 0; }
+
+.shop-header { margin-bottom: 24px; }
+.shop-header h1 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); margin: 0; }
+
+.shop-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.shop-chips-sub { border-top: 1px solid var(--border); padding-top: 18px; margin-top: 6px; margin-bottom: 20px; }
+
+.shop-chip {
+  padding: 10px 18px;
+  border-radius: var(--radius-chip);
+  border: 1px solid rgba(138, 176, 154, 0.35);
+  color: var(--text);
+  font-size: 0.82rem;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.shop-chip:hover { border-color: var(--gold); color: var(--gold); }
+.shop-chip.on { background: var(--gold); border-color: var(--gold); color: var(--bg); }
+
+.shop-status { text-align: center; color: var(--text-3); padding: 60px 0; }
+.shop-status-error { color: var(--warn); }

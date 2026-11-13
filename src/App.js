@@ -14,9 +14,9 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import Favorites from './pages/Favorites';
 import Product from './pages/Product';
+import Shop from './pages/Shop';
 import AdminLogin from './pages/AdminLogin';
 import Footer from './components/Footer';
-import ProductGrid from './components/ProductGrid';
 import AdminUpload from './pages/AdminUpload';
 import { ToastContainer } from './components/Toast';
 
@@ -36,13 +36,18 @@ function App() {
               {/* Home */}
               <Route path="/" element={<Home />} />
 
-              {/* Category Routes (replaced by /shop in Phase 4) */}
-              <Route path="/shirts" element={<ProductGrid category="Shirts" title="Shirts" />} />
-              <Route path="/trousers" element={<ProductGrid category="Trousers" title="Trousers" />} />
-              <Route path="/outerwear" element={<ProductGrid category="Outerwear" title="Outerwear" />} />
-              <Route path="/footwear" element={<ProductGrid category="Footwear" title="Footwear" />} />
-              <Route path="/essentials" element={<ProductGrid category="Essentials" title="Essentials" />} />
-              <Route path="/accessories" element={<ProductGrid category="Accessories" title="Accessories" />} />
+              {/* Shop — category/filter pages */}
+              <Route path="/shop" element={<Shop />} />
+              <Route path="/shop/:category" element={<Shop />} />
+              <Route path="/shop/:category/:sub" element={<Shop />} />
+
+              {/* Old category URLs, now redirected to /shop/:category */}
+              <Route path="/shirts" element={<Navigate to="/shop/shirts" replace />} />
+              <Route path="/trousers" element={<Navigate to="/shop/trousers" replace />} />
+              <Route path="/outerwear" element={<Navigate to="/shop/outerwear" replace />} />
+              <Route path="/footwear" element={<Navigate to="/shop/footwear" replace />} />
+              <Route path="/essentials" element={<Navigate to="/shop/essentials" replace />} />
+              <Route path="/accessories" element={<Navigate to="/shop/accessories" replace />} />
 
               {/* Admin Route */}
               <Route path="/admin" element={<ProtectedRoute adminOnly={true}><AdminUpload /></ProtectedRoute>} />
@@ -57,9 +62,6 @@ function App() {
               {/* Product Detail — /product/:productId now accepts either a
                   slug or a legacy numeric id; Product.jsx resolves both. */}
               <Route path="/product/:productId" element={<Product />} />
-
-              {/* Dynamic Subcategory Route */}
-              <Route path="/:category/:subcategory" element={<ProductGrid />} />
             </Routes>
 
             <Footer />
