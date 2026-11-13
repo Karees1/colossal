@@ -207,3 +207,56 @@
 }
 .btn-whatsapp:hover { filter: brightness(1.08); }
 .btn-whatsapp:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.bagdrawer-next { width: 100%; margin-top: 16px; }
+
+.bagdrawer-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 28px;
+  overflow-y: auto;
+}
+
+.bagdrawer-back {
+  background: none;
+  border: none;
+  color: var(--text-3);
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 20px;
+  text-align: left;
+  align-self: flex-start;
+}
+
+.bagdrawer-back:hover { color: var(--gold); }
+
+.bagdrawer-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.bagdrawer-field label {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.bagdrawer-field input {
+  height: 48px;
+  padding: 0 14px;
+  background: var(--bg);
+  border: 1px solid var(--border-str);
+  color: var(--text);
+  border-radius: var(--radius-img);
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+}
+
+.bagdrawer-hint { color: var(--warn); font-size: 0.8rem; margin: 0 0 12px; }
+
+.bagdrawer-feefine { color: var(--text-3); font-size: 0.75rem; margin: 6px 0 14px; }

@@ -1,17 +1,15 @@
 import React, { useState, useEffect, useRef, useLayoutEffect, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import './ProductDetail.css';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import './Product.css';
 import placeholderImg from "../images/placeholder.svg";
-import { cartManager } from '../utils/cartManager';
-import { favoritesManager } from '../utils/favoritesManager';
+import { useStore } from '../store/StoreContext';
 import { showToast } from '../components/Toast';
 import CountUp from '../components/CountUp';
 import { useReveal, prefersReducedMotion } from '../hooks/useReveal';
 import { supabase } from '../lib/supabaseClient';
 import { resolveImageUrl as resolveStorageUrl } from '../utils/resolveImageUrl';
+import { waLink, buildProductInquiryMessage } from '../lib/whatsapp';
 
-const PLACEHOLDER_RATING = 4.7;
-const PLACEHOLDER_REVIEW_COUNT = 18;
 const FIT_OPTIONS = ['Slim', 'Regular', 'Classic', 'Relaxed'];
 
 const PERKS = [
@@ -27,33 +25,8 @@ const TABS = [
   { key: 'care', label: 'Care' },
 ];
 
-const STATIC_REVIEWS = [
-  {
-    stars: 5,
-    body: '"Exactly as advertised. Wore it to a board meeting and a wedding the same week — held up beautifully."',
-    name: 'James K.',
-    meta: '2 weeks ago',
-  },
-  {
-    stars: 5,
-    body: '"Excellent quality for the price. The material breathes well in the Nairobi heat. Will be back for another."',
-    name: 'Daniel M.',
-    meta: '1 month ago',
-  },
-  {
-    stars: 4,
-    body: '"Great piece overall. Took half a star off because it ran a touch snug — sized up and it\'s perfect now."',
-    name: 'Anthony O.',
-    meta: '1 month ago',
-  },
-];
-
 const STAGGER_STEP = 70;
 const GRID_STAGGER_STEP = 90;
-
-function Stars({ count }) {
-  return <span className="pdp-stars">{'★'.repeat(count)}{'☆'.repeat(5 - count)}</span>;
-}
 
 function RelatedCard({ product, index, onQuickAdd, resolveImageUrl }) {
   const [ref, inView] = useReveal();
@@ -67,7 +40,7 @@ function RelatedCard({ product, index, onQuickAdd, resolveImageUrl }) {
       className={`pdp-related pdp-reveal ${inView ? 'in' : ''}`}
       style={{ '--d': `${index * GRID_STAGGER_STEP}ms` }}
     >
-      <Link to={`/product/${product.id}`} className="pdp-related-link">
+      <Link to={`/product/${product.slug || product.id}`} className="pdp-related-link">
         <div className="pdp-related-art">
           <img src={resolveImageUrl(rawImg)} alt={name} />
           <span className="pdp-related-cat">{product.category}</span>
@@ -82,26 +55,10 @@ function RelatedCard({ product, index, onQuickAdd, resolveImageUrl }) {
   );
 }
 
-function ReviewCard({ review, index }) {
-  const [ref, inView] = useReveal();
-  return (
-    <article
-      ref={ref}
-      className={`pdp-review pdp-reveal ${inView ? 'in' : ''}`}
-      style={{ '--d': `${index * GRID_STAGGER_STEP}ms` }}
-    >
-      <div className="pdp-review-head">
-        <Stars count={review.stars} />
-        <span className="pdp-review-verified">✓ verified buyer</span>
-      </div>
-      <p className="pdp-review-body">{review.body}</p>
-      <span className="pdp-review-meta">{review.name} · {review.meta}</span>
-    </article>
-  );
-}
-
-function ProductDetail() {
-  const { productId } = useParams();
+function Product() {
+  const { productId: slugParam } = useParams();
+  const navigate = useNavigate();
+  const { isSaved, toggleSaved, addToBag } = useStore();
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -114,7 +71,6 @@ function ProductDetail() {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [wiping, setWiping] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
-  const [wishlisted, setWishlisted] = useState(false);
   const [burst, setBurst] = useState(false);
   const [activeTab, setActiveTab] = useState('details');
   const [stickyVisible, setStickyVisible] = useState(false);
@@ -129,7 +85,6 @@ function ProductDetail() {
   const [catRef, catIn] = useReveal();
   const [nameRef, nameIn] = useReveal();
   const [rowRef, rowIn] = useReveal();
-  const [ratingRef, ratingIn] = useReveal();
   const [descRef, descIn] = useReveal();
   const [colorBlockRef, colorBlockIn] = useReveal();
   const [sizeBlockRef, sizeBlockIn] = useReveal();
@@ -138,9 +93,8 @@ function ProductDetail() {
   const [perksRef, perksIn] = useReveal();
   const [tabsHeadRef, tabsHeadIn] = useReveal();
   const [completeHeadRef, completeHeadIn] = useReveal();
-  const [reviewsHeadRef, reviewsHeadIn] = useReveal();
-
   useEffect(() => {
+    let cancelled = false;
     const fetchProduct = async () => {
       setLoading(true);
       setActiveImageIndex(0);
@@ -150,34 +104,43 @@ function ProductDetail() {
       setQuantity(1);
       setActiveTab('details');
       try {
-        const { data: found, error: fetchError } = await supabase
-          .from('products')
-          .select('*')
-          .eq('id', productId)
-          .single();
-        if (fetchError || !found) throw new Error('Product not found');
+        // Try the slug first (the canonical URL). If the param is purely
+        // numeric, it's an old bookmarked /product/:id link — fall back to
+        // an id lookup, then rewrite the address bar to the real slug.
+        let found = null;
+        const { data: bySlug } = await supabase.from('products').select('*').eq('slug', slugParam).maybeSingle();
+        found = bySlug;
+        if (!found && /^\d+$/.test(slugParam)) {
+          const { data: byId } = await supabase.from('products').select('*').eq('id', slugParam).maybeSingle();
+          if (byId) {
+            found = byId;
+            if (byId.slug) navigate(`/product/${byId.slug}`, { replace: true });
+          }
+        }
+        if (!found) throw new Error('Product not found');
+        if (cancelled) return;
 
         setProduct(found);
-        setWishlisted(favoritesManager.isFavorite(found.id));
 
         if (found.category) {
           const { data: relatedData } = await supabase
             .from('products')
             .select('*')
             .ilike('category', found.category);
-          setRelatedProducts((relatedData || []).filter(p => p.id !== found.id).slice(0, 4));
-        } else {
+          if (!cancelled) setRelatedProducts((relatedData || []).filter(p => p.id !== found.id).slice(0, 4));
+        } else if (!cancelled) {
           setRelatedProducts([]);
         }
       } catch (err) {
-        setError('Failed to load product details');
+        if (!cancelled) setError('Failed to load product details');
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
     fetchProduct();
-  }, [productId]);
+    return () => { cancelled = true; };
+  }, [slugParam, navigate]);
 
   // sticky add-to-cart bar: shows once the buy panel scrolls out of view
   useEffect(() => {
@@ -223,7 +186,6 @@ function ProductDetail() {
   };
 
   const productPrice = getPriceNumber(product.price);
-  const comparePrice = Math.round(productPrice * 1.3);
   const totalPrice = productPrice * quantity;
 
   const resolveImageUrl = (imgPath) => {
@@ -282,65 +244,38 @@ function ProductDetail() {
     }
     if (addedToCart) return;
 
-    const cartItem = {
-      id: product.id,
-      title: productName,
-      price: productPrice,
-      priceDisplay: product.price,
-      frontImg: dbImage ? resolveImageUrl(dbImage) : placeholderImg,
-      selectedSize: selectedSize || 'One Size',
-      selectedColor: selectedColor || 'Default',
-      selectedFit,
-      quantity,
-    };
-
-    cartManager.addToCart(cartItem);
-    window.dispatchEvent(new Event('cartUpdated'));
-    showToast(`Added ${quantity}× ${productName} to cart!`);
+    addToBag(product.id, selectedSize || null, selectedColor || null, quantity);
+    showToast(`Added ${quantity}× ${productName} to bag!`);
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2200);
   };
 
+  const wishlisted = isSaved(product.id);
+
   const handleToggleWishlist = () => {
-    if (wishlisted) {
-      favoritesManager.removeFromFavorites(product.id);
-      setWishlisted(false);
-    } else {
-      favoritesManager.addToFavorites(product);
-      setWishlisted(true);
+    const willBeSaved = !wishlisted;
+    toggleSaved(product.id);
+    if (willBeSaved) {
       if (!prefersReducedMotion()) {
         setBurst(true);
         setTimeout(() => setBurst(false), 650);
       }
-      showToast(`Added ${productName} to favorites!`);
+      showToast(`Added ${productName} to saved!`);
     }
-    window.dispatchEvent(new Event('favoritesUpdated'));
   };
 
   const handleQuickAdd = (e, relProduct) => {
     e.preventDefault();
     const rName = relProduct.name || relProduct.title;
-    const rPrice = getPriceNumber(relProduct.price);
-    const rImg = relProduct.frontimg || relProduct.image || relProduct.frontImg;
-    cartManager.addToCart({
-      id: relProduct.id,
-      title: rName,
-      price: rPrice,
-      priceDisplay: relProduct.price,
-      frontImg: resolveImageUrl(rImg),
-      selectedSize: relProduct.sizes && relProduct.sizes.length ? relProduct.sizes[0] : 'One Size',
-      selectedColor: 'Default',
-      quantity: 1,
-    });
-    window.dispatchEvent(new Event('cartUpdated'));
-    showToast(`Added ${rName} to cart!`);
+    addToBag(relProduct.id, relProduct.sizes && relProduct.sizes.length ? relProduct.sizes[0] : null, null, 1);
+    showToast(`Added ${rName} to bag!`);
   };
 
   const getAddToCartLabel = () => {
-    if (addedToCart) return '✓ Added to cart';
+    if (addedToCart) return '✓ Added to bag';
     if (hasSizes && !selectedSize) return 'Select Size First';
     if (hasColors && !selectedColor) return 'Select Color First';
-    return `Add to cart — KSh ${totalPrice.toLocaleString()}`;
+    return `Add to bag — KSh ${totalPrice.toLocaleString()}`;
   };
 
   const isAddToCartDisabled = (hasSizes && !selectedSize) || (hasColors && !selectedColor);
@@ -378,7 +313,7 @@ function ProductDetail() {
             onClick={handleAddToCart}
             disabled={isAddToCartDisabled}
           >
-            {addedToCart ? '✓ Added to cart' : 'Add to cart'}
+            {addedToCart ? '✓ Added to bag' : 'Add to bag'}
           </button>
         </div>
       </div>
@@ -450,17 +385,7 @@ function ProductDetail() {
               style={{ '--d': `${2 * STAGGER_STEP}ms` }}
             >
               <span className="pdp-buy-price">KSh <CountUp value={productPrice} decimals={0} /></span>
-              <span className="pdp-buy-compare">KSh {comparePrice.toLocaleString()}</span>
               <span className="pdp-buy-stock">In stock — ships 1–2 days</span>
-            </div>
-
-            <div
-              ref={ratingRef}
-              className={`pdp-buy-rating pdp-reveal ${ratingIn ? 'in' : ''}`}
-              style={{ '--d': `${3 * STAGGER_STEP}ms` }}
-            >
-              <Stars count={5} />
-              <span><CountUp value={PLACEHOLDER_RATING} decimals={1} />/5 · <CountUp value={PLACEHOLDER_REVIEW_COUNT} decimals={0} /> reviews</span>
             </div>
 
             <p
@@ -565,6 +490,15 @@ function ProductDetail() {
                 <span className="pdp-heart-burst" />
               </button>
             </div>
+
+            <a
+              className="pdp-whatsapp-cta"
+              href={waLink(buildProductInquiryMessage(product, window.location.href))}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <span className="wa-dot" /> Ask about this on WhatsApp
+            </a>
 
             <ul
               ref={perksRef}
@@ -680,22 +614,8 @@ function ProductDetail() {
         </section>
       )}
 
-      {/* reviews */}
-      <section className="pdp-reviews">
-        <header ref={reviewsHeadRef} className={`pdp-section-head pdp-reveal ${reviewsHeadIn ? 'in' : ''}`}>
-          <span className="pdp-section-eyebrow">— WHAT THE HOUSE SAYS —</span>
-          <h2 className={`pdp-section-h pdp-mask ${reviewsHeadIn ? 'in' : ''}`}>
-            <CountUp value={PLACEHOLDER_RATING} decimals={1} />/5 from <em><CountUp value={PLACEHOLDER_REVIEW_COUNT} decimals={0} /> men.</em>
-          </h2>
-        </header>
-        <div className="pdp-reviews-grid">
-          {STATIC_REVIEWS.map((review, index) => (
-            <ReviewCard key={review.name} review={review} index={index} />
-          ))}
-        </div>
-      </section>
     </div>
   );
 }
 
-export default ProductDetail;
+export default Product;

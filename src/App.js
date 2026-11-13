@@ -13,7 +13,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 import Home from './pages/Home';
 import Favorites from './pages/Favorites';
-import ProductDetail from './pages/ProductDetail';
+import Product from './pages/Product';
 import AdminLogin from './pages/AdminLogin';
 import Footer from './components/Footer';
 import ProductGrid from './components/ProductGrid';
@@ -54,8 +54,9 @@ function App() {
               <Route path="/cart" element={<Navigate to="/" replace />} />
               <Route path="/checkout" element={<Navigate to="/" replace />} />
 
-              {/* Product Detail (moves to /product/:slug in Phase 3) */}
-              <Route path="/product/:productId" element={<ProductDetail />} />
+              {/* Product Detail — /product/:productId now accepts either a
+                  slug or a legacy numeric id; Product.jsx resolves both. */}
+              <Route path="/product/:productId" element={<Product />} />
 
               {/* Dynamic Subcategory Route */}
               <Route path="/:category/:subcategory" element={<ProductGrid />} />

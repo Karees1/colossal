@@ -31,7 +31,7 @@ function ProductCard({ product, index = 0 }) {
       style={{ '--d': `${(index % 4) * 80}ms` }}
     >
       <div className="product-card-image-wrap">
-        <Link to={`/product/${product.id}`} className="product-card-link" aria-label={product.name}>
+        <Link to={`/product/${product.slug || product.id}`} className="product-card-link" aria-label={product.name}>
           <img src={frontSrc} alt={product.name} className="product-card-img front" />
           <img src={backSrc} alt="" aria-hidden="true" className="product-card-img back" />
         </Link>
@@ -65,7 +65,7 @@ function ProductCard({ product, index = 0 }) {
         )}
       </div>
 
-      <Link to={`/product/${product.id}`} className="product-card-info">
+      <Link to={`/product/${product.slug || product.id}`} className="product-card-info">
         <p className="product-card-name">{product.name}</p>
         <div className="product-card-meta">
           <span className="product-card-material">{product.material || product.sub_category}</span>
