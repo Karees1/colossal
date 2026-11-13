@@ -15,6 +15,11 @@ import Home from './pages/Home';
 import Favorites from './pages/Favorites';
 import Product from './pages/Product';
 import Shop from './pages/Shop';
+import Visit from './pages/Visit';
+import HowToOrder from './pages/HowToOrder';
+import SizeGuide from './pages/SizeGuide';
+import OrderSent from './pages/OrderSent';
+import NotFound from './pages/NotFound';
 import AdminLogin from './pages/AdminLogin';
 import Footer from './components/Footer';
 import AdminUpload from './pages/AdminUpload';
@@ -62,6 +67,13 @@ function App() {
               {/* Product Detail — /product/:productId now accepts either a
                   slug or a legacy numeric id; Product.jsx resolves both. */}
               <Route path="/product/:productId" element={<Product />} />
+
+              {/* Info pages + order confirmation + 404 */}
+              <Route path="/visit" element={<Visit />} />
+              <Route path="/how-to-order" element={<HowToOrder />} />
+              <Route path="/size-guide" element={<SizeGuide />} />
+              <Route path="/order/sent" element={<OrderSent />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
 
             <Footer />

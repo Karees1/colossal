@@ -1,0 +1,38 @@
+.ordersent-page {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: clamp(60px, 8vw, 100px) 20px;
+  text-align: center;
+}
+
+.ordersent-check {
+  width: 64px; height: 64px;
+  margin: 0 auto 24px;
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: var(--gold);
+}
+
+.ordersent-page h1 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 16px; }
+.ordersent-body { color: var(--text-2); line-height: 1.7; margin-bottom: 20px; }
+.ordersent-ref { color: var(--text-3); margin-bottom: 32px; }
+.ordersent-ref strong { color: var(--gold); }
+.ordersent-fallback { color: var(--text-3); margin-bottom: 32px; }
+.ordersent-fallback a { color: var(--whatsapp); }
+
+.ordersent-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 36px;
+  text-align: left;
+  color: var(--text-2);
+  font-size: 0.88rem;
+}
+
+.ordersent-steps div { display: flex; align-items: center; gap: 12px; }
+.ordersent-steps span { color: var(--gold); font-family: var(--font-display); font-style: italic; }

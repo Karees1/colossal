@@ -1,0 +1,27 @@
+.hto-page { max-width: 900px; margin: 0 auto; padding-bottom: 60px; }
+
+.hto-section { padding: clamp(40px, 6vw, 56px) clamp(20px, 5vw, 0px); }
+.hto-section h2 { margin-bottom: 18px; }
+.hto-section p { color: var(--text-2); line-height: 1.7; }
+.provisional { font-style: italic; color: var(--text-dim); }
+
+.hto-table { width: 100%; border-collapse: collapse; }
+.hto-table th, .hto-table td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+.hto-table th { color: var(--text-3); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
+
+.hto-faq-item { border-bottom: 1px solid var(--border); }
+.hto-faq-q {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+}
+.hto-faq-q:hover { color: var(--gold); }
+.hto-faq-a { color: var(--text-2); padding-bottom: 18px; margin: 0; }

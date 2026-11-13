@@ -1,0 +1,25 @@
+.sizeguide-page { max-width: 700px; margin: 0 auto; padding: clamp(40px, 6vw, 72px) clamp(20px, 5vw, 0px) 60px; }
+
+.sizeguide-page h1 { margin-bottom: 10px; }
+.provisional { font-style: italic; color: var(--text-dim); font-size: 0.85rem; }
+.sizeguide-note { margin-bottom: 28px; }
+
+.sizeguide-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+
+.sizeguide-tab {
+  padding: 9px 16px;
+  border: 1px solid var(--border-str);
+  color: var(--text-3);
+  font-size: 0.8rem;
+  border-radius: var(--radius-chip);
+}
+
+.sizeguide-tab.on { background: var(--gold); border-color: var(--gold); color: var(--bg); }
+
+.sizeguide-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+.sizeguide-table th, .sizeguide-table td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+.sizeguide-table th { color: var(--text-3); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
+
+.sizeguide-fitnote { color: var(--text-2); font-size: 0.88rem; margin-bottom: 28px; }
+
+.sizeguide-cta { width: auto; display: inline-flex; }
