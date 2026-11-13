@@ -1,47 +1,29 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
-import {
-  FaHeart, FaShoppingCart, FaUser, FaBars,
-  FaTimes, FaChevronDown, FaSignOutAlt
-} from "react-icons/fa";
-import { cartManager } from "../utils/cartManager";
+import { Menu, X, ChevronDown, Heart, ShoppingBag, LogOut } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useStore } from "../store/StoreContext";
 import { categories } from "./categories";
 
 function Navbar() {
-  const [favoritesCount, setFavoritesCount] = useState(0);
-  const [cartCount, setCartCount] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState(null);
-  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-  const userDropdownCloseTimeout = useRef(null);
   const { isAuthenticated, user, logout } = useAuth();
+  const { saved, bagCount, openBag } = useStore();
+  const bagBtnRef = useRef(null);
+  const prevBagCount = useRef(bagCount);
 
   useEffect(() => {
-    const update = () => {
-      const fav = localStorage.getItem('gentlemanFavorites');
-      setFavoritesCount(fav ? JSON.parse(fav).length : 0);
-    };
-    update();
-    window.addEventListener('storage', update);
-    window.addEventListener('favoritesUpdated', update);
-    return () => {
-      window.removeEventListener('storage', update);
-      window.removeEventListener('favoritesUpdated', update);
-    };
-  }, []);
-
-  useEffect(() => {
-    const update = () => setCartCount(cartManager.getCartCount());
-    update();
-    window.addEventListener('storage', update);
-    window.addEventListener('cartUpdated', update);
-    return () => {
-      window.removeEventListener('storage', update);
-      window.removeEventListener('cartUpdated', update);
-    };
-  }, []);
+    if (bagCount > prevBagCount.current && bagBtnRef.current) {
+      const el = bagBtnRef.current;
+      el.classList.remove('bump');
+      // eslint-disable-next-line no-unused-expressions
+      void el.offsetWidth; // restart animation
+      el.classList.add('bump');
+    }
+    prevBagCount.current = bagCount;
+  }, [bagCount]);
 
   const closeSidebar = () => {
     setSidebarOpen(false);
@@ -50,77 +32,44 @@ function Navbar() {
 
   return (
     <>
-      {/* ── Top Bar ── */}
+      <div className="announcement-bar">
+        <span>Pay on delivery</span>
+        <span className="dot">·</span>
+        <span>Order on WhatsApp</span>
+        <span className="dot">·</span>
+        <span>Try on at our Nairobi shop</span>
+      </div>
+
       <nav className="topbar">
         <button className="hamburger" onClick={() => setSidebarOpen(true)} aria-label="Open menu">
-          <FaBars />
+          <Menu size={20} />
         </button>
 
-        <Link to="/" className="brand">GENTLEMAN</Link>
+        <Link to="/" className="brand">
+          <span className="brand-mark">G</span>
+          <span className="brand-word">GENTLEMAN</span>
+        </Link>
 
         <div className="nav-icons">
-          <Link to="/favorites" className="icon-link">
-            <FaHeart className="icon" />
-            {favoritesCount > 0 && <span className="favorites-badge">{favoritesCount}</span>}
+          <Link to="/saved" className="icon-link" aria-label="Saved">
+            <Heart size={19} className="icon" />
+            {saved.length > 0 && <span className="icon-badge">{saved.length}</span>}
           </Link>
 
-          <Link to="/cart" className="icon-link">
-            <FaShoppingCart className="icon" />
-            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
-          </Link>
-
-          <div
-            className="icon-link user-dropdown-wrap"
-            onMouseEnter={() => {
-              clearTimeout(userDropdownCloseTimeout.current);
-              setIsUserDropdownOpen(true);
-            }}
-            onMouseLeave={() => {
-              userDropdownCloseTimeout.current = setTimeout(() => setIsUserDropdownOpen(false), 220);
-            }}
-          >
-            <FaUser className="icon" />
-            {isUserDropdownOpen && (
-              <div className="user-dropdown-menu">
-                {isAuthenticated ? (
-                  <>
-                    <div className="dropdown-header">
-                      {user?.email || "Welcome"}
-                      {user?.user_type === 'admin' && <span className="admin-badge">Admin</span>}
-                    </div>
-                    {user?.user_type === 'admin' && (
-                      <Link to="/admin" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}>
-                        Admin Panel
-                      </Link>
-                    )}
-                    <button
-                      onClick={() => { logout(); setIsUserDropdownOpen(false); }}
-                      className="dropdown-item logout-btn"
-                    >
-                      <FaSignOutAlt /> Logout
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <Link to="/login" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}>Login</Link>
-                    <Link to="/register" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}>Sign Up</Link>
-                  </>
-                )}
-              </div>
-            )}
-          </div>
+          <button ref={bagBtnRef} className="icon-link bag-btn" onClick={openBag} aria-label="Open bag">
+            <ShoppingBag size={19} className="icon" />
+            {bagCount > 0 && <span className="icon-badge icon-badge-gold">{bagCount}</span>}
+          </button>
         </div>
       </nav>
 
-      {/* ── Sidebar Overlay ── */}
       <div className={`sidebar-overlay ${sidebarOpen ? 'visible' : ''}`} onClick={closeSidebar} />
 
-      {/* ── Sidebar ── */}
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <Link to="/" className="sidebar-brand" onClick={closeSidebar}>GENTLEMAN</Link>
           <button className="sidebar-close" onClick={closeSidebar} aria-label="Close menu">
-            <FaTimes />
+            <X size={18} />
           </button>
         </div>
 
@@ -132,14 +81,14 @@ function Navbar() {
                 onClick={() => setExpandedCategory(prev => prev === category ? null : category)}
               >
                 <span>{category}</span>
-                <FaChevronDown className={`chevron ${expandedCategory === category ? 'rotated' : ''}`} />
+                <ChevronDown size={14} className={`chevron ${expandedCategory === category ? 'rotated' : ''}`} />
               </button>
 
               <div className={`sidebar-subcategories ${expandedCategory === category ? 'expanded' : ''}`}>
                 {categories[category].map((sub) => (
                   <Link
                     key={sub}
-                    to={`/${category.toLowerCase()}/${sub.toLowerCase().replace(/ & /g, '-').replace(/\s+/g, '-')}`}
+                    to={`/shop/${category.toLowerCase()}/${sub.toLowerCase().replace(/ & /g, '-').replace(/\s+/g, '-')}`}
                     className="sidebar-sub-link"
                     onClick={closeSidebar}
                   >
@@ -147,7 +96,7 @@ function Navbar() {
                   </Link>
                 ))}
                 <Link
-                  to={`/${category.toLowerCase()}`}
+                  to={`/shop/${category.toLowerCase()}`}
                   className="sidebar-sub-link view-all"
                   onClick={closeSidebar}
                 >
@@ -156,20 +105,19 @@ function Navbar() {
               </div>
             </div>
           ))}
+          <Link to="/shop" className="sidebar-view-all-shop" onClick={closeSidebar}>
+            View all pieces →
+          </Link>
         </nav>
 
-        <div className="sidebar-footer">
-          {isAuthenticated ? (
-            <button onClick={() => { logout(); closeSidebar(); }} className="sidebar-auth-btn">
-              <FaSignOutAlt /> Logout
+        {isAuthenticated && user?.user_type === 'admin' && (
+          <div className="sidebar-footer">
+            <Link to="/admin" className="sidebar-auth-btn" onClick={closeSidebar}>Admin Panel</Link>
+            <button onClick={() => { logout(); closeSidebar(); }} className="sidebar-auth-btn outline">
+              <LogOut size={15} /> Logout
             </button>
-          ) : (
-            <div className="sidebar-auth-links">
-              <Link to="/login" className="sidebar-auth-btn" onClick={closeSidebar}>Login</Link>
-              <Link to="/register" className="sidebar-auth-btn outline" onClick={closeSidebar}>Sign Up</Link>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </aside>
     </>
   );

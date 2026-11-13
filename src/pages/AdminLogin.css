@@ -10,7 +10,7 @@
 .login-card {
   background-color: var(--surface);
   border: 1px solid var(--border-str);
-  border-radius: 2px;
+  border-radius: var(--radius-img);
   padding: 40px 36px;
   width: 100%;
   max-width: 420px;
@@ -18,11 +18,9 @@
 }
 
 .login-card h2 {
-  font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: 1.9rem;
   letter-spacing: 4px;
   text-align: center;
-  color: var(--gold);
   margin-bottom: 28px;
   text-transform: uppercase;
 }
@@ -34,34 +32,33 @@
   gap: 6px;
 }
 
+.form-group input {
+  background: var(--surface);
+  border: 1px solid var(--border-str);
+  color: var(--text);
+  padding: 11px 14px;
+  border-radius: var(--radius-img);
+  font-family: var(--font-ui);
+}
+
+.form-group label {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
 .submit-btn {
   width: 100%;
-  padding: 13px;
   margin-top: 8px;
-  font-size: 0.82rem;
 }
 
 .error-message {
   background-color: rgba(184, 60, 60, 0.1);
-  color: #d97070;
+  color: var(--warn);
   padding: 11px 14px;
-  border-radius: 2px;
+  border-radius: var(--radius-img);
   margin-bottom: 18px;
   font-size: 0.82rem;
   border-left: 3px solid var(--danger);
 }
-
-.signup-link {
-  text-align: center;
-  margin-top: 20px;
-  color: var(--text-muted);
-  font-size: 0.83rem;
-}
-
-.signup-link a {
-  color: var(--gold);
-  font-weight: 600;
-  transition: color 0.15s;
-}
-
-.signup-link a:hover { color: var(--gold-lt); }

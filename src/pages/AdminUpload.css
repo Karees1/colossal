@@ -41,7 +41,7 @@
 .admin-tab {
   background: transparent !important;
   border: 1px solid var(--border-str) !important;
-  color: var(--text-muted) !important;
+  color: var(--text-3) !important;
   padding: 8px 20px;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.74rem;
@@ -88,7 +88,7 @@ label {
   font-weight: 600;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text-3);
 }
 
 .optional-note {
@@ -149,7 +149,7 @@ textarea { min-height: 110px; resize: vertical; }
   gap: 6px;
   cursor: pointer;
   font-size: 0.82rem;
-  color: var(--text-muted);
+  color: var(--text-3);
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -183,9 +183,9 @@ input[type="checkbox"] {
 .color-input-row button {
   padding: 0 20px;
   height: 44px;
-  background: var(--green-md) !important;
-  color: var(--gold) !important;
-  border: 1px solid var(--green-lt) !important;
+  background: var(--gold) !important;
+  color: var(--bg) !important;
+  border: 1px solid var(--gold-lt) !important;
   border-radius: 2px !important;
   cursor: pointer;
   font-family: 'Montserrat', sans-serif;
@@ -197,7 +197,7 @@ input[type="checkbox"] {
   flex-shrink: 0;
 }
 
-.color-input-row button:hover { background: var(--green-lt) !important; }
+.color-input-row button:hover { background: var(--gold-lt) !important; }
 
 .color-list {
   display: flex;
@@ -271,9 +271,9 @@ input[type="file"]:hover { border-color: var(--gold); }
 .submit-btn {
   flex: 1;
   padding: 14px;
-  background: var(--green-md) !important;
-  color: var(--gold) !important;
-  border: 1px solid var(--green-lt) !important;
+  background: var(--gold) !important;
+  color: var(--bg) !important;
+  border: 1px solid var(--gold-lt) !important;
   border-radius: 2px !important;
   cursor: pointer;
   font-family: 'Montserrat', sans-serif;
@@ -284,13 +284,13 @@ input[type="file"]:hover { border-color: var(--gold); }
   transition: background 0.2s !important;
 }
 
-.submit-btn:hover:not(:disabled) { background: var(--green-lt) !important; }
+.submit-btn:hover:not(:disabled) { background: var(--gold-lt) !important; }
 .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .cancel-btn {
   padding: 14px 28px;
   background: transparent !important;
-  color: var(--text-muted) !important;
+  color: var(--text-3) !important;
   border: 1px solid var(--border-str) !important;
   border-radius: 2px !important;
   cursor: pointer;
@@ -302,7 +302,7 @@ input[type="file"]:hover { border-color: var(--gold); }
   transition: border-color 0.2s !important;
 }
 
-.cancel-btn:hover { border-color: var(--text-muted) !important; }
+.cancel-btn:hover { border-color: var(--text-3) !important; }
 
 /* Products Table */
 .products-table-wrap {
@@ -339,7 +339,7 @@ input[type="file"]:hover { border-color: var(--gold); }
   border-bottom: 1px solid var(--border);
   vertical-align: middle;
   font-size: 0.88rem;
-  color: var(--text-muted);
+  color: var(--text-3);
 }
 
 .products-table tr:last-child td { border-bottom: none; }

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import './Login.css';
+import './AdminLogin.css';
 
-const Login = () => {
+const AdminLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -18,7 +18,7 @@ const Login = () => {
 
         try {
             await login(email, password);
-            navigate('/'); // Redirect to home on success
+            navigate('/admin');
         } catch (err) {
             setError(err.message || 'Login failed. Please try again.');
         } finally {
@@ -29,7 +29,7 @@ const Login = () => {
     return (
         <div className="login-container">
             <div className="login-card">
-                <h2>Login</h2>
+                <h2>Admin Login</h2>
                 {error && <div className="error-message">{error}</div>}
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
@@ -56,16 +56,13 @@ const Login = () => {
                             placeholder="••••••••"
                         />
                     </div>
-                    <button type="submit" disabled={isLoading} className="submit-btn">
+                    <button type="submit" disabled={isLoading} className="submit-btn btn btn-primary">
                         {isLoading ? 'Logging in...' : 'Login'}
                     </button>
                 </form>
-                <p className="signup-link">
-                    Don't have an account? <Link to="/register">Sign up</Link>
-                </p>
             </div>
         </div>
     );
 };
 
-export default Login;
+export default AdminLogin;

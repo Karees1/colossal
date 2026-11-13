@@ -1,0 +1,52 @@
+.bottomtabs {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 960;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  grid-template-columns: repeat(5, 1fr);
+  padding-bottom: env(safe-area-inset-bottom);
+  height: 58px;
+}
+
+@media (max-width: 767px) {
+  .bottomtabs { display: grid; }
+  body { padding-bottom: calc(58px + env(safe-area-inset-bottom)); }
+}
+
+.bottomtabs-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  color: var(--text-3);
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.bottomtabs-tab.active { color: var(--gold); }
+.bottomtabs-tab:hover { color: var(--gold); }
+.bottomtabs-wa { color: var(--whatsapp); }
+
+.bottomtabs-icon-wrap { position: relative; }
+
+.bottomtabs-badge {
+  position: absolute;
+  top: -6px; right: -10px;
+  background: var(--danger);
+  color: #fff;
+  border-radius: 50%;
+  width: 15px; height: 15px;
+  font-size: 0.55rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bottomtabs-badge-gold { background: var(--gold); color: var(--bg); }

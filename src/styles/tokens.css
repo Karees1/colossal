@@ -1,0 +1,33 @@
+:root {
+  --bg: #0A1810;
+  --surface: #0F2118;
+  --green-dk: #193A28;
+  --gold: #C4A44E;
+  --gold-lt: #D9BE7A;
+  --sage: #8AB09A;
+  --text: #ECF1EE;
+  --text-2: #A9C4B5;
+  --text-3: #7AA890;
+  --whatsapp: #5FD08A;
+  --warn: #E8A07A;
+
+  --radius-img: 2px;
+  --radius-btn: 0px;
+  --radius-chip: 40px;
+  --radius-dot: 50%;
+
+  --ease-tailor: cubic-bezier(.2,.75,.2,1);
+  --ease-drawer: cubic-bezier(.2,.8,.2,1);
+
+  --font-display: 'Bodoni Moda', Georgia, serif;
+  --font-ui: 'Jost', -apple-system, sans-serif;
+
+  /* carried over only so AdminUpload.css doesn't need a full rewrite —
+     not part of the customer-facing design spec */
+  --surface-hi: #152C1E;
+  --border: rgba(138, 176, 154, 0.18);
+  --border-str: rgba(138, 176, 154, 0.42);
+  --text-dim: #4A6A58;
+  --danger: #B83C3C;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.50);
+}

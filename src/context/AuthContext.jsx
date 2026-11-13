@@ -44,6 +44,10 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
+  // Unused by the UI since public registration was removed — admin accounts
+  // are provisioned directly in Supabase. Kept in case a self-service path
+  // is ever wanted again; harmless either way, since handle_new_user()
+  // hardcodes user_type='user' server-side regardless of who calls this.
   const register = async (email, password) => {
     const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) throw new Error(error.message);
