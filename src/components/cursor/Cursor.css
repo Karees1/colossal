@@ -1,0 +1,75 @@
+body.custom-cursor-active,
+body.custom-cursor-active * {
+  cursor: none;
+}
+
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ECF1EE;
+  pointer-events: none;
+  z-index: 9999;
+  transition: opacity 0.2s;
+  will-change: transform;
+}
+
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(236, 241, 238, 0.55);
+  background: transparent;
+  pointer-events: none;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.3s var(--ease-tailor), height 0.3s var(--ease-tailor),
+    border-color 0.3s var(--ease-tailor), background 0.3s var(--ease-tailor),
+    opacity 0.2s;
+  will-change: transform;
+}
+
+.cursor-ring-label {
+  opacity: 0;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #0A1810;
+  transition: opacity 0.2s;
+}
+
+.cursor-ring[data-mode="link"] {
+  width: 58px;
+  height: 58px;
+  border-color: var(--gold);
+  background: rgba(196, 164, 78, 0.08);
+}
+
+.cursor-ring[data-mode="view"] {
+  width: 92px;
+  height: 92px;
+  border-color: var(--gold);
+  background: var(--gold);
+}
+
+.cursor-ring[data-mode="view"] .cursor-ring-label {
+  opacity: 1;
+}
+
+@media (pointer: coarse) {
+  body.custom-cursor-active,
+  body.custom-cursor-active * {
+    cursor: auto;
+  }
+  .cursor-dot, .cursor-ring { display: none; }
+}

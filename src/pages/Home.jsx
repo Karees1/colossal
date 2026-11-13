@@ -5,8 +5,10 @@ import ProductGridSection from '../components/ProductGridSection';
 import HowItWorks from '../components/HowItWorks';
 import VisitPreview from '../components/VisitPreview';
 import { supabase } from '../lib/supabaseClient';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 function Home() {
+  useDocumentTitle();
   const [products, setProducts] = useState([]);
   const [categoryCounts, setCategoryCounts] = useState({});
   const [loading, setLoading] = useState(true);

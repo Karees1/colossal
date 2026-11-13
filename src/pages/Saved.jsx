@@ -4,9 +4,11 @@ import { useStore } from '../store/StoreContext';
 import { supabase } from '../lib/supabaseClient';
 import { waLink, buildSavedListMessage } from '../lib/whatsapp';
 import ProductGridSection from '../components/ProductGridSection';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import './Saved.css';
 
 function Saved() {
+  useDocumentTitle('Saved');
   const { saved } = useStore();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);

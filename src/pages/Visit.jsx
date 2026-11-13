@@ -1,5 +1,6 @@
 import React from 'react';
 import { waLink, buildFittingMessage } from '../lib/whatsapp';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import './Visit.css';
 
 const FITTING_OPTIONS = [
@@ -9,6 +10,7 @@ const FITTING_OPTIONS = [
 ];
 
 function Visit() {
+  useDocumentTitle('Visit');
   return (
     <div className="visit-page">
       <header className="visit-hero">

@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Navbar from "./components/Navbar";
 import BagDrawer from "./components/BagDrawer";
 import BottomTabBar from "./components/BottomTabBar";
+import Cursor from "./components/cursor/Cursor";
 
 import { AuthProvider } from './context/AuthContext';
 import { StoreProvider } from './store/StoreContext';
@@ -31,6 +32,7 @@ function App() {
       <StoreProvider>
         <Router>
           <div className="App">
+            <Cursor />
             <Navbar />
             <Routes>
               {/* Admin auth */}

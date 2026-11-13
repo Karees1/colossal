@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../store/StoreContext';
 import { useOverlay } from '../hooks/useOverlay';
+import { useMagnet } from '../hooks/useMagnet';
 import { supabase } from '../lib/supabaseClient';
 import { resolveImageUrl } from '../utils/resolveImageUrl';
 import { fmtKES } from '../lib/format';
@@ -12,6 +13,7 @@ import './BagDrawer.css';
 function BagDrawer() {
   const { bag, bagOpen, closeBag, updateBagQty, removeFromBag, clearBag, customer, setCustomer } = useStore();
   const containerRef = useOverlay({ open: bagOpen, onClose: closeBag });
+  const sendMagnet = useMagnet();
   const [products, setProducts] = useState({});
   const [step, setStep] = useState('review'); // 'review' | 'details'
   const [name, setName] = useState(customer.name || '');
@@ -132,6 +134,7 @@ function BagDrawer() {
                     src={resolveImageUrl(l.product?.frontimg, placeholderImg)}
                     alt={l.product?.name || ''}
                     className="bagdrawer-thumb"
+                    loading="lazy"
                   />
                   <div className="bagdrawer-line-info">
                     <p className="bagdrawer-line-name">{l.product?.name || '…'}</p>
@@ -202,7 +205,7 @@ function BagDrawer() {
                 <span className="bagdrawer-total-value">{fmtKES(subtotal)}</span>
               </div>
               <p className="bagdrawer-feefine">Delivery fee confirmed on WhatsApp.</p>
-              <button className="btn btn-whatsapp" onClick={handleSend} disabled={sending}>
+              <button ref={sendMagnet} className="btn btn-whatsapp" onClick={handleSend} disabled={sending}>
                 <span className="wa-dot" /> {sending ? 'Opening WhatsApp…' : 'Send order on WhatsApp'}
               </button>
             </div>

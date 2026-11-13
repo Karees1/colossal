@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { waLink, buildSizeHelpMessage } from '../lib/whatsapp';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import './SizeGuide.css';
 
 const TABS = {
@@ -58,6 +59,7 @@ const TABS = {
 };
 
 function SizeGuide() {
+  useDocumentTitle('Size Guide');
   const [active, setActive] = useState(Object.keys(TABS)[0]);
   const tab = TABS[active];
 

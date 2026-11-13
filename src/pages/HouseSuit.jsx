@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabaseClient';
 import { resolveImageUrl } from '../utils/resolveImageUrl';
 import { fmtKES } from '../lib/format';
 import { showToast } from '../components/Toast';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import placeholderImg from '../images/placeholder.svg';
 import './HouseSuit.css';
 
@@ -26,6 +27,7 @@ const CHAPTERS = [
 ];
 
 function HouseSuit() {
+  useDocumentTitle('The House Suit');
   const { addToBag } = useStore();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);

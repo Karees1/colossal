@@ -31,9 +31,14 @@ function ProductCard({ product, index = 0 }) {
       style={{ '--d': `${(index % 4) * 80}ms` }}
     >
       <div className="product-card-image-wrap">
-        <Link to={`/product/${product.slug || product.id}`} className="product-card-link" aria-label={product.name}>
-          <img src={frontSrc} alt={product.name} className="product-card-img front" />
-          <img src={backSrc} alt="" aria-hidden="true" className="product-card-img back" />
+        <Link
+          to={`/product/${product.slug || product.id}`}
+          className="product-card-link"
+          aria-label={product.name}
+          data-cursor="view"
+        >
+          <img src={frontSrc} alt={product.name} className="product-card-img front" loading="lazy" />
+          <img src={backSrc} alt="" aria-hidden="true" className="product-card-img back" loading="lazy" />
         </Link>
 
         {product.is_signature && <span className="product-card-badge gold">Signature</span>}

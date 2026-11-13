@@ -9,13 +9,44 @@
       name="description"
       content="GENTLEMAN is a Nairobi house of craft for the modern man — suits, shirts and footwear cut, sewn, and hand-finished for considered, lasting wear."
     />
+    <!-- Static site-wide unfurl card for WhatsApp/Facebook link previews.
+         Per-product images aren't possible here: those crawlers fetch raw
+         HTML and never run the client bundle, so a route only CRA can't
+         serve a different og:image per product without a prerender or
+         edge-function step, which is outside this stack. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="GENTLEMAN" />
+    <meta property="og:title" content="GENTLEMAN — Tailored menswear, Nairobi" />
+    <meta
+      property="og:description"
+      content="Shirts, suits and footwear cut for the modern man. Pick your size, send your order on WhatsApp, and pay only when it's in your hands."
+    />
+    <meta property="og:image" content="%PUBLIC_URL%/logo512.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="GENTLEMAN — Tailored menswear, Nairobi" />
+    <meta
+      name="twitter:description"
+      content="Shirts, suits and footwear cut for the modern man. Order on WhatsApp, pay on delivery."
+    />
+    <meta name="twitter:image" content="%PUBLIC_URL%/logo512.png" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Preload + swap-in so the fonts stylesheet never blocks first paint;
+         the stylesheet's own &display=swap still avoids invisible text
+         while the webfont itself loads. -->
     <link
-      rel="stylesheet"
+      rel="preload"
+      as="style"
       href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,700;0,6..96,800;1,6..96,400;1,6..96,500&family=Jost:wght@300;400;500;600&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,700;0,6..96,800;1,6..96,400;1,6..96,500&family=Jost:wght@300;400;500;600&display=swap"
+      />
+    </noscript>
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/

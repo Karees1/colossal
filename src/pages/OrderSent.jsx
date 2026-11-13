@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { waLink, buildGeneralQuestionMessage } from '../lib/whatsapp';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import './OrderSent.css';
 
 function OrderSent() {
+  useDocumentTitle('Order Sent');
   const location = useLocation();
   const ref = location.state?.ref;
-
-  useEffect(() => { document.title = 'Order sent — GENTLEMAN'; }, []);
 
   return (
     <div className="ordersent-page">

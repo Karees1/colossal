@@ -216,7 +216,7 @@
   min-width: 44px;
   min-height: 44px;
   justify-content: center;
-  transition: color 0.2s;
+  transition: color 0.2s, transform 0.25s var(--ease-tailor);
 }
 
 .icon-link:hover { color: var(--gold); }

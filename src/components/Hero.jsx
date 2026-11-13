@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useMagnet } from '../hooks/useMagnet';
 import './Hero.css';
 
 const WHATSAPP_NUMBER = process.env.REACT_APP_WHATSAPP_NUMBER || '254700000000';
@@ -10,6 +11,8 @@ function prefersReducedMotion() {
 
 function Hero() {
   const [mounted, setMounted] = useState(prefersReducedMotion());
+  const shopMagnet = useMagnet();
+  const waMagnet = useMagnet();
 
   useEffect(() => {
     if (prefersReducedMotion()) return;
@@ -33,9 +36,10 @@ function Hero() {
           send your order on WhatsApp, and pay only when it's in your hands.
         </p>
         <div className="hero-cta-row" style={{ '--d': '550ms' }}>
-          <Link to="/shop" className="btn btn-primary">Shop new in</Link>
+          <Link to="/shop" className="btn btn-primary" ref={shopMagnet}>Shop new in</Link>
           <a
             className="btn btn-outline btn-wa-outline"
+            ref={waMagnet}
             href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hello GENTLEMAN, I have a question.')}`}
             target="_blank"
             rel="noreferrer"

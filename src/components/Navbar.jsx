@@ -4,6 +4,7 @@ import "./Navbar.css";
 import { Menu, X, ChevronDown, Heart, ShoppingBag, LogOut } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useStore } from "../store/StoreContext";
+import { useMagnet } from "../hooks/useMagnet";
 import { categories } from "./categories";
 
 function Navbar() {
@@ -13,6 +14,7 @@ function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
   const { saved, bagCount, openBag } = useStore();
   const bagBtnRef = useRef(null);
+  const bagMagnetRef = useMagnet();
   const prevBagCount = useRef(bagCount);
 
   useEffect(() => {
@@ -91,7 +93,12 @@ function Navbar() {
             {saved.length > 0 && <span className="icon-badge">{saved.length}</span>}
           </Link>
 
-          <button ref={bagBtnRef} className="icon-link bag-btn" onClick={openBag} aria-label="Open bag">
+          <button
+            ref={(el) => { bagBtnRef.current = el; bagMagnetRef.current = el; }}
+            className="icon-link bag-btn"
+            onClick={openBag}
+            aria-label="Open bag"
+          >
             <ShoppingBag size={19} className="icon" />
             {bagCount > 0 && <span className="icon-badge icon-badge-gold">{bagCount}</span>}
           </button>

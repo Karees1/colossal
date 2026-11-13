@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import HowItWorks from '../components/HowItWorks';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import './HowToOrder.css';
 
 const ZONES = [
@@ -28,6 +29,7 @@ function FaqItem({ q, a }) {
 }
 
 function HowToOrder() {
+  useDocumentTitle('How to Order');
   return (
     <div className="hto-page">
       <HowItWorks heading="How ordering works" />

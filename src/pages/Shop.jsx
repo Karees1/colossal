@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import { categories } from '../components/categories';
 import ProductGridSection from '../components/ProductGridSection';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import './Shop.css';
 
 function titleCase(str) {
@@ -55,6 +56,8 @@ function Shop() {
   const matchedCategoryKey = category
     ? Object.keys(categories).find((c) => c.toLowerCase() === category.toLowerCase())
     : null;
+
+  useDocumentTitle(title);
 
   return (
     <div className="shop-page">

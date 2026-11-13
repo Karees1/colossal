@@ -184,7 +184,7 @@
   text-align: center;
   border-radius: var(--radius-btn);
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.25s var(--ease-tailor);
   min-height: 44px;
 }
 

@@ -4,6 +4,7 @@ import './AdminUpload.css';
 import { showToast } from '../components/Toast';
 import { supabase } from '../lib/supabaseClient';
 import { resolveImageUrl } from '../utils/resolveImageUrl';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 const BUCKET = 'products';
 
@@ -23,6 +24,7 @@ const buildStoragePath = (file) => {
 };
 
 const AdminUpload = () => {
+    useDocumentTitle('Admin');
     const [formData, setFormData]         = useState(EMPTY_FORM);
     const [sizes, setSizes]               = useState([]);
     const [colors, setColors]             = useState([]);

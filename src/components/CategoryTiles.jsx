@@ -13,6 +13,7 @@ function Tile({ name, count, index }) {
       to={`/shop/${name.toLowerCase()}`}
       className={`category-tile ${inView ? 'in' : ''}`}
       style={{ '--d': `${(index % 6) * 60}ms` }}
+      data-cursor="view"
     >
       <div className="category-tile-art">
         <Eye size={18} />

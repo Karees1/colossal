@@ -6,6 +6,8 @@ import { useStore } from '../store/StoreContext';
 import { showToast } from '../components/Toast';
 import CountUp from '../components/CountUp';
 import { useReveal, prefersReducedMotion } from '../hooks/useReveal';
+import { useMagnet } from '../hooks/useMagnet';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { supabase } from '../lib/supabaseClient';
 import { resolveImageUrl as resolveStorageUrl } from '../utils/resolveImageUrl';
 import { waLink, buildProductInquiryMessage } from '../lib/whatsapp';
@@ -40,9 +42,9 @@ function RelatedCard({ product, index, onQuickAdd, resolveImageUrl }) {
       className={`pdp-related pdp-reveal ${inView ? 'in' : ''}`}
       style={{ '--d': `${index * GRID_STAGGER_STEP}ms` }}
     >
-      <Link to={`/product/${product.slug || product.id}`} className="pdp-related-link">
+      <Link to={`/product/${product.slug || product.id}`} className="pdp-related-link" data-cursor="view">
         <div className="pdp-related-art">
-          <img src={resolveImageUrl(rawImg)} alt={name} />
+          <img src={resolveImageUrl(rawImg)} alt={name} loading="lazy" />
           <span className="pdp-related-cat">{product.category}</span>
           <button className="pdp-related-add" onClick={(e) => onQuickAdd(e, product)}>+ Add</button>
         </div>
@@ -59,7 +61,9 @@ function Product() {
   const { productId: slugParam } = useParams();
   const navigate = useNavigate();
   const { isSaved, toggleSaved, addToBag } = useStore();
+  const addToBagMagnet = useMagnet();
   const [product, setProduct] = useState(null);
+  useDocumentTitle(product?.name);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -288,7 +292,7 @@ function Product() {
           {activeImage.placeholder ? (
             <span className="pdp-stickybar-thumb pdp-ph pdp-ph--charcoal" />
           ) : (
-            <img className="pdp-stickybar-thumb" src={images[0].url} alt={productName} />
+            <img className="pdp-stickybar-thumb" src={images[0].url} alt={productName} loading="lazy" />
           )}
           <span className="pdp-stickybar-meta">
             <span className="pdp-stickybar-name">{productName}</span>
@@ -331,7 +335,7 @@ function Product() {
 
           {/* gallery */}
           <div ref={galleryRef} className={`pdp-gallery pdp-reveal ${galleryIn ? 'in' : ''}`}>
-            <div className="pdp-gallery-main">
+            <div className="pdp-gallery-main" data-cursor="view">
               <div className={`pdp-gallery-stage ${wiping ? 'wiping' : ''}`}>
                 <div className="pdp-gallery-zoomwrap">
                   {activeImage.placeholder ? (
@@ -354,7 +358,7 @@ function Product() {
                     className={`pdp-gallery-thumb ${activeImageIndex === i ? 'on' : ''}`}
                     onClick={() => handleThumbClick(i)}
                   >
-                    <img src={img.url} alt={img.alt} />
+                    <img src={img.url} alt={img.alt} loading="lazy" />
                   </button>
                 ))}
               </div>
@@ -475,6 +479,7 @@ function Product() {
                 <button onClick={() => setQuantity(q => Math.min(10, q + 1))}>+</button>
               </div>
               <button
+                ref={addToBagMagnet}
                 className={`pdp-cta pdp-cta-full ${addedToCart ? 'on' : ''} ${isAddToCartDisabled ? 'disabled' : ''}`}
                 onClick={handleAddToCart}
                 disabled={isAddToCartDisabled}
