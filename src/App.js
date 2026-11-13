@@ -1,7 +1,6 @@
 import './App.css';
 import './styles/tokens.css';
 import './styles/base.css';
-import './components/Theme.css'; /* still needed by not-yet-rebuilt pages; dropped in Phase 6 */
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from "./components/Navbar";
 import BagDrawer from "./components/BagDrawer";
@@ -12,9 +11,10 @@ import { StoreProvider } from './store/StoreContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
 import Home from './pages/Home';
-import Favorites from './pages/Favorites';
+import Saved from './pages/Saved';
 import Product from './pages/Product';
 import Shop from './pages/Shop';
+import HouseSuit from './pages/HouseSuit';
 import Visit from './pages/Visit';
 import HowToOrder from './pages/HowToOrder';
 import SizeGuide from './pages/SizeGuide';
@@ -57,8 +57,12 @@ function App() {
               {/* Admin Route */}
               <Route path="/admin" element={<ProtectedRoute adminOnly={true}><AdminUpload /></ProtectedRoute>} />
 
-              {/* Favorites (replaced by /saved in Phase 6) */}
-              <Route path="/favorites" element={<Favorites />} />
+              {/* Saved (localStorage-only, no accounts) */}
+              <Route path="/saved" element={<Saved />} />
+              <Route path="/favorites" element={<Navigate to="/saved" replace />} />
+
+              {/* The House Suit — signature product long-page */}
+              <Route path="/the-house-suit" element={<HouseSuit />} />
 
               {/* Cart/Checkout removed — bag is a drawer, WhatsApp replaces checkout */}
               <Route path="/cart" element={<Navigate to="/" replace />} />

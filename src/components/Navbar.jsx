@@ -9,6 +9,7 @@ import { categories } from "./categories";
 function Navbar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState(null);
+  const [megaOpen, setMegaOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const { saved, bagCount, openBag } = useStore();
   const bagBtnRef = useRef(null);
@@ -50,7 +51,41 @@ function Navbar() {
           <span className="brand-word">GENTLEMAN</span>
         </Link>
 
+        <div
+          className="navlinks"
+          onMouseEnter={() => setMegaOpen(true)}
+          onMouseLeave={() => setMegaOpen(false)}
+        >
+          <div className="navlinks-shop-wrap">
+            <Link to="/shop" className="navlink">Shop</Link>
+            {megaOpen && (
+              <div className="megamenu">
+                {Object.keys(categories).map((category) => (
+                  <div key={category} className="megamenu-col">
+                    <Link to={`/shop/${category.toLowerCase()}`} className="megamenu-col-title">
+                      {category}
+                    </Link>
+                    {categories[category].map((sub) => (
+                      <Link
+                        key={sub}
+                        to={`/shop/${category.toLowerCase()}/${sub.toLowerCase().replace(/ & /g, '-').replace(/\s+/g, '-')}`}
+                        className="megamenu-link"
+                      >
+                        {sub}
+                      </Link>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <Link to="/shop" className="navlink">New in</Link>
+          <Link to="/the-house-suit" className="navlink">The House Suit</Link>
+          <Link to="/visit" className="navlink">Visit</Link>
+        </div>
+
         <div className="nav-icons">
+          <Link to="/size-guide" className="navlink navlink-sizeguide">Size guide</Link>
           <Link to="/saved" className="icon-link" aria-label="Saved">
             <Heart size={19} className="icon" />
             {saved.length > 0 && <span className="icon-badge">{saved.length}</span>}
