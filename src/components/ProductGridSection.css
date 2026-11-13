@@ -1,0 +1,30 @@
+.pgs-section {
+  padding: clamp(56px, 7vw, 100px) clamp(20px, 5vw, 72px);
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.pgs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pgs-header h2 {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.pgs-viewall { color: var(--gold); font-size: 0.85rem; text-decoration: underline; }
+
+.pgs-empty { color: var(--text-3); text-align: center; padding: 40px 0; }
+
+.pgs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 40px 22px;
+}

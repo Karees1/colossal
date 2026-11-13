@@ -29,7 +29,8 @@ function BagDrawer() {
           data.forEach((p) => { next[p.id] = p; });
           return next;
         });
-      });
+      })
+      .catch(() => { /* ignore — lines render with placeholder data until retried */ });
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bag]);
